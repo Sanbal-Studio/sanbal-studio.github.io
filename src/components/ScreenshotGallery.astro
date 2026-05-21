@@ -1,0 +1,66 @@
+---
+import type { AppInfo } from '../data/apps';
+
+interface Props {
+  app: AppInfo;
+}
+
+const { app } = Astro.props;
+---
+
+{
+  app.screenshots.length > 0 && (
+    <section class="screenshot-section" aria-labelledby="screenshots-title">
+      <div class="section-heading">
+        <p class="eyebrow">Preview</p>
+        <h2 id="screenshots-title">{app.name} 화면</h2>
+      </div>
+      <div class="screenshot-grid">
+        {app.screenshots.map((screenshot) => (
+          <figure>
+            <img src={screenshot.src} alt={screenshot.alt} loading="lazy" />
+          </figure>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .screenshot-section {
+    margin-top: 72px;
+  }
+
+  .section-heading {
+    margin-bottom: 24px;
+  }
+
+  .screenshot-grid {
+    display: grid;
+    gap: 18px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  figure {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    margin: 0;
+    overflow: hidden;
+    padding: 10px;
+  }
+
+  img {
+    aspect-ratio: 9 / 16;
+    border-radius: 6px;
+    height: auto;
+    object-fit: cover;
+    width: 100%;
+  }
+
+  @media (max-width: 820px) {
+    .screenshot-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

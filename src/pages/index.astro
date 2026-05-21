@@ -1,17 +1,192 @@
 ---
-
+import AppCard from '../components/AppCard.astro';
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { apps, studio } from '../data/apps';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<SiteLayout title={studio.name} description={studio.description} image="/assets/apps/not-todo/home.png">
+  <section class="home-hero" aria-labelledby="hero-title">
+    <div class="hero-media" aria-hidden="true">
+      <img class="hero-shot hero-shot--one" src="/assets/apps/not-todo/home.png" alt="" />
+      <img class="hero-shot hero-shot--two" src="/assets/apps/walk-bingo/board-preview.svg" alt="" />
+      <img class="hero-icon hero-icon--one" src="/assets/apps/not-todo/icon.png" alt="" />
+      <img class="hero-icon hero-icon--two" src="/assets/apps/walk-bingo/icon.png" alt="" />
+    </div>
+    <div class="hero-shade" aria-hidden="true"></div>
+    <div class="hero-content">
+      <p class="eyebrow">Independent app studio</p>
+      <h1 id="hero-title">Sanbal Studio</h1>
+      <p>{studio.description}</p>
+      <div class="button-row">
+        <a class="button primary" href="#apps">앱 보기</a>
+        <a class="button secondary" href={`mailto:${studio.email}`}>이메일 문의</a>
+        <a class="button secondary" href={studio.links.threads} target="_blank" rel="noreferrer">Threads</a>
+        <a class="button secondary" href={studio.links.x} target="_blank" rel="noreferrer">X</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="apps" class="section" aria-labelledby="apps-title">
+    <div class="section-intro">
+      <p class="eyebrow">Apps</p>
+      <h2 id="apps-title">하나의 허브에서 관리하는 앱 컬렉션</h2>
+      <p class="lead">
+        앱별 상세 소개, 지원 URL, 개인정보처리방침 URL을 같은 구조로 제공합니다.
+        새 앱은 메타데이터와 MDX 콘텐츠를 추가해 확장할 수 있습니다.
+      </p>
+    </div>
+    <div class="app-grid">
+      {apps.map((app) => <AppCard app={app} />)}
+    </div>
+  </section>
+
+  <section class="section studio-links" aria-labelledby="support-title">
+    <div>
+      <p class="eyebrow">Support</p>
+      <h2 id="support-title">앱 문의는 앱별 지원 페이지에서 시작합니다</h2>
+    </div>
+    <a class="button primary" href="/contact">전체 문의 허브</a>
+  </section>
+</SiteLayout>
+
+<style>
+  .home-hero {
+    background: #101714;
+    color: #fff;
+    min-height: 72svh;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .hero-media,
+  .hero-shade {
+    inset: 0;
+    position: absolute;
+  }
+
+  .hero-shade {
+    background: rgba(16, 23, 20, 0.62);
+  }
+
+  .hero-shot,
+  .hero-icon {
+    position: absolute;
+  }
+
+  .hero-shot {
+    border-radius: 28px;
+    box-shadow: 0 28px 90px rgba(0, 0, 0, 0.42);
+    height: min(70vh, 760px);
+    object-fit: cover;
+    width: auto;
+  }
+
+  .hero-shot--one {
+    right: 18vw;
+    top: 7vh;
+    transform: rotate(-7deg);
+  }
+
+  .hero-shot--two {
+    right: -40px;
+    top: 15vh;
+    transform: rotate(8deg);
+  }
+
+  .hero-icon {
+    border-radius: 26px;
+    box-shadow: 0 20px 70px rgba(0, 0, 0, 0.34);
+    height: 116px;
+    width: 116px;
+  }
+
+  .hero-icon--one {
+    right: 44vw;
+    top: 12vh;
+  }
+
+  .hero-icon--two {
+    bottom: 12vh;
+    right: 9vw;
+  }
+
+  .hero-content {
+    max-width: 760px;
+    padding: 14vh 32px 11vh;
+    position: relative;
+    width: min(100%, 1180px);
+    z-index: 1;
+  }
+
+  .hero-content p:not(.eyebrow) {
+    color: rgba(255, 255, 255, 0.82);
+    font-size: clamp(1.1rem, 2vw, 1.38rem);
+    margin: 24px 0 32px;
+    max-width: 680px;
+  }
+
+  .home-hero .eyebrow {
+    color: #9cd1ae;
+  }
+
+  .home-hero .button.secondary {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.28);
+    color: #fff;
+  }
+
+  .section-intro {
+    margin-bottom: 28px;
+  }
+
+  .app-grid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .studio-links {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  @media (max-width: 860px) {
+    .home-hero {
+      min-height: 78svh;
+    }
+
+    .hero-shot {
+      height: 50vh;
+      opacity: 0.56;
+    }
+
+    .hero-shot--one {
+      left: 45%;
+      right: auto;
+    }
+
+    .hero-shot--two {
+      right: -45%;
+    }
+
+    .hero-icon {
+      display: none;
+    }
+
+    .hero-content {
+      padding: 12vh 20px 10vh;
+    }
+
+    .app-grid,
+    .studio-links {
+      grid-template-columns: 1fr;
+    }
+
+    .studio-links {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  }
+</style>

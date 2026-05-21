@@ -1,0 +1,337 @@
+---
+import { studio } from '../data/apps';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+}
+
+const { title, description, image = '/favicon.svg' } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://sanbal-studio.github.io');
+const fullTitle = title === studio.name ? title : `${title} | ${studio.name}`;
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="canonical" href={canonical} />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta property="og:site_name" content={studio.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={image} />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">본문으로 이동</a>
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="Sanbal Studio 홈">
+        <span class="brand-mark" aria-hidden="true">S</span>
+        <span>{studio.name}</span>
+      </a>
+      <nav class="site-nav" aria-label="주요 메뉴">
+        <a href="/#apps">Apps</a>
+        <a href="/contact">Contact</a>
+      </nav>
+    </header>
+    <main id="main">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div>
+        <strong>{studio.name}</strong>
+        <p>{studio.tagline}</p>
+      </div>
+      <nav aria-label="Sanbal Studio 외부 링크">
+        <a href={`mailto:${studio.email}`}>Email</a>
+        <a href={studio.links.threads} target="_blank" rel="noreferrer">Threads</a>
+        <a href={studio.links.x} target="_blank" rel="noreferrer">X</a>
+      </nav>
+    </footer>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --bg: #f5f7f2;
+    --surface: #ffffff;
+    --surface-muted: #eef3ed;
+    --ink: #171d1a;
+    --muted: #5d6760;
+    --line: #dce4dc;
+    --green: #2d5f47;
+    --green-strong: #17402e;
+    --coral: #d95f43;
+    --blue: #315f87;
+    --shadow: 0 20px 60px rgba(22, 31, 26, 0.12);
+    color-scheme: light;
+    font-family:
+      Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+      sans-serif;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    background: var(--bg);
+    color: var(--ink);
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    min-width: 320px;
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+
+  a {
+    color: inherit;
+    text-decoration-thickness: 0.08em;
+    text-underline-offset: 0.18em;
+  }
+
+  a:focus-visible,
+  button:focus-visible {
+    outline: 3px solid var(--coral);
+    outline-offset: 3px;
+  }
+
+  .skip-link {
+    background: var(--ink);
+    color: #fff;
+    left: 1rem;
+    padding: 0.6rem 0.9rem;
+    position: fixed;
+    top: -5rem;
+    z-index: 20;
+  }
+
+  .skip-link:focus {
+    top: 1rem;
+  }
+
+  .site-header {
+    align-items: center;
+    background: rgba(245, 247, 242, 0.92);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    min-height: 72px;
+    padding: 0 32px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .brand,
+  .site-nav,
+  .site-footer nav,
+  .button-row {
+    align-items: center;
+    display: flex;
+    gap: 12px;
+  }
+
+  .brand {
+    font-weight: 800;
+    text-decoration: none;
+  }
+
+  .brand-mark {
+    align-items: center;
+    background: var(--ink);
+    border-radius: 8px;
+    color: #fff;
+    display: inline-flex;
+    height: 34px;
+    justify-content: center;
+    width: 34px;
+  }
+
+  .site-nav a,
+  .site-footer a {
+    color: var(--muted);
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .site-nav a:hover,
+  .site-footer a:hover {
+    color: var(--ink);
+  }
+
+  .site-footer {
+    align-items: center;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    margin: 80px auto 0;
+    max-width: 1180px;
+    padding: 32px;
+  }
+
+  .site-footer p {
+    color: var(--muted);
+    margin: 4px 0 0;
+  }
+
+  .section {
+    margin: 0 auto;
+    max-width: 1180px;
+    padding: 72px 32px 0;
+  }
+
+  .section.narrow {
+    max-width: 860px;
+  }
+
+  .eyebrow {
+    color: var(--green);
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0;
+    margin: 0 0 12px;
+    text-transform: uppercase;
+  }
+
+  h1,
+  h2,
+  h3,
+  p {
+    overflow-wrap: anywhere;
+  }
+
+  h1,
+  h2,
+  h3 {
+    line-height: 1.12;
+    margin: 0;
+  }
+
+  h1 {
+    font-size: clamp(3rem, 8vw, 7.2rem);
+    letter-spacing: 0;
+  }
+
+  h2 {
+    font-size: clamp(2rem, 4vw, 3.6rem);
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+
+  .lead {
+    color: var(--muted);
+    font-size: clamp(1.05rem, 2vw, 1.3rem);
+    max-width: 720px;
+  }
+
+  .button {
+    align-items: center;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    display: inline-flex;
+    font-weight: 800;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0.7rem 1rem;
+    text-decoration: none;
+  }
+
+  .button.primary {
+    background: var(--green);
+    border-color: var(--green);
+    color: #fff;
+  }
+
+  .button.secondary {
+    background: var(--surface);
+    color: var(--ink);
+  }
+
+  .button.subtle {
+    background: transparent;
+    color: var(--muted);
+  }
+
+  .status-pill {
+    background: var(--surface-muted);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--green-strong);
+    display: inline-flex;
+    font-size: 0.86rem;
+    font-weight: 800;
+    padding: 0.25rem 0.7rem;
+    width: fit-content;
+  }
+
+  .prose {
+    color: var(--ink);
+    font-size: 1.05rem;
+  }
+
+  .prose h2,
+  .prose h3 {
+    margin-top: 2.2rem;
+  }
+
+  .prose p,
+  .prose li {
+    color: var(--muted);
+  }
+
+  .prose a {
+    color: var(--green-strong);
+    font-weight: 700;
+  }
+
+  @media (max-width: 720px) {
+    .site-header,
+    .site-footer {
+      align-items: flex-start;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .site-header {
+      gap: 12px;
+      position: static;
+    }
+
+    .section {
+      padding: 48px 20px 0;
+    }
+
+    .button-row {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .button {
+      width: 100%;
+    }
+  }
+</style>

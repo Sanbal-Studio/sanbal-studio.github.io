@@ -1,0 +1,104 @@
+---
+import ScreenshotGallery from '../../components/ScreenshotGallery.astro';
+import StoreLinks from '../../components/StoreLinks.astro';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import { apps, type AppInfo } from '../../data/apps';
+
+export function getStaticPaths() {
+  return apps.map((app) => ({
+    params: { slug: app.slug },
+    props: { app },
+  }));
+}
+
+interface Props {
+  app: AppInfo;
+}
+
+const { app } = Astro.props;
+const detailModules = import.meta.glob('../../content/apps/*/detail.mdx');
+const detailPath = `../../content/apps/${app.slug}/detail.mdx`;
+const Detail = ((await detailModules[detailPath]()) as { default: never }).default;
+---
+
+<SiteLayout title={app.name} description={app.summary} image={app.icon}>
+  <section class="app-hero section">
+    <div class="app-hero__copy">
+      <p class="eyebrow">App</p>
+      <img class="app-icon" src={app.icon} alt={`${app.name} 앱 아이콘`} width="104" height="104" />
+      <h1>{app.name}</h1>
+      <p class="lead">{app.tagline}</p>
+      <StoreLinks app={app} />
+      <div class="button-row">
+        <a class="button secondary" href={app.supportUrl}>지원 페이지</a>
+        <a class="button secondary" href={app.privacyUrl}>개인정보처리방침</a>
+      </div>
+    </div>
+    <div class="app-hero__media" aria-hidden="true">
+      {app.screenshots.slice(0, 2).map((screenshot) => <img src={screenshot.src} alt="" />)}
+    </div>
+  </section>
+
+  <section class="section narrow">
+    <div class="prose">
+      <Detail />
+    </div>
+  </section>
+
+  <section class="section">
+    <ScreenshotGallery app={app} />
+  </section>
+</SiteLayout>
+
+<style>
+  .app-hero {
+    align-items: center;
+    display: grid;
+    gap: 48px;
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 0.8fr);
+  }
+
+  .app-icon {
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    margin-bottom: 24px;
+  }
+
+  .app-hero__copy {
+    display: grid;
+    gap: 18px;
+    justify-items: start;
+  }
+
+  .app-hero__media {
+    align-items: center;
+    display: grid;
+    gap: 18px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .app-hero__media img {
+    aspect-ratio: 9 / 16;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    object-fit: cover;
+    padding: 8px;
+    width: 100%;
+  }
+
+  .app-hero__media img:nth-child(2) {
+    margin-top: 56px;
+  }
+
+  @media (max-width: 880px) {
+    .app-hero {
+      grid-template-columns: 1fr;
+    }
+
+    .app-hero__media {
+      max-width: 540px;
+    }
+  }
+</style>

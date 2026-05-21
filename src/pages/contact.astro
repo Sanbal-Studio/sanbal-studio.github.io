@@ -1,0 +1,73 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { apps, studio } from '../data/apps';
+---
+
+<SiteLayout title="Contact" description="Sanbal Studio 전체 문의 허브">
+  <section class="section narrow contact-header">
+    <p class="eyebrow">Contact</p>
+    <h1>Sanbal Studio 문의</h1>
+    <p class="lead">
+      앱 관련 문의는 앱별 지원 페이지를 먼저 확인해 주세요. 전체 문의와 제휴, 스토어 제출 관련 연락은 이메일로 받을 수 있습니다.
+    </p>
+    <div class="button-row">
+      <a class="button primary" href={`mailto:${studio.email}`}>이메일 보내기</a>
+      <a class="button secondary" href={studio.links.threads} target="_blank" rel="noreferrer">Threads</a>
+      <a class="button secondary" href={studio.links.x} target="_blank" rel="noreferrer">X</a>
+    </div>
+  </section>
+
+  <section class="section narrow" aria-labelledby="app-support-title">
+    <p class="eyebrow">App support</p>
+    <h2 id="app-support-title">앱별 지원 페이지</h2>
+    <div class="support-list">
+      {
+        apps.map((app) => (
+          <a href={app.supportUrl}>
+            <img src={app.icon} alt="" width="52" height="52" />
+            <span>
+              <strong>{app.name}</strong>
+              <small>{app.summary}</small>
+            </span>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+</SiteLayout>
+
+<style>
+  .contact-header {
+    display: grid;
+    gap: 18px;
+  }
+
+  .support-list {
+    display: grid;
+    gap: 12px;
+    margin-top: 24px;
+  }
+
+  .support-list a {
+    align-items: center;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    color: inherit;
+    display: grid;
+    gap: 14px;
+    grid-template-columns: auto 1fr;
+    padding: 16px;
+    text-decoration: none;
+  }
+
+  .support-list img {
+    border-radius: 12px;
+  }
+
+  .support-list small {
+    color: var(--muted);
+    display: block;
+    margin-top: 2px;
+  }
+</style>
