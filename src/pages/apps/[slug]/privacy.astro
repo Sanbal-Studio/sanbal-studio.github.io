@@ -1,0 +1,55 @@
+---
+import SiteLayout from '../../../layouts/SiteLayout.astro';
+import { apps, mailtoForApp, type AppInfo } from '../../../data/apps';
+
+export function getStaticPaths() {
+  return apps.map((app) => ({
+    params: { slug: app.slug },
+    props: { app },
+  }));
+}
+
+interface Props {
+  app: AppInfo;
+}
+
+const { app } = Astro.props;
+const privacyModules = import.meta.glob('../../../content/apps/*/privacy.mdx');
+const privacyPath = `../../../content/apps/${app.slug}/privacy.mdx`;
+const Privacy = ((await privacyModules[privacyPath]()) as { default: never }).default;
+---
+
+<SiteLayout
+  title={`${app.name} 개인정보처리방침`}
+  description={`${app.name} 앱의 개인정보 처리 기준`}
+  image={app.icon}
+>
+  <section class="section narrow policy-header">
+    <p class="eyebrow">Privacy Policy</p>
+    <img src={app.icon} alt={`${app.name} 앱 아이콘`} width="72" height="72" />
+    <h1>{app.name} 개인정보처리방침</h1>
+    <p class="lead">스토어 제출용 Privacy Policy URL로 사용할 수 있는 앱별 문서입니다.</p>
+    <div class="button-row">
+      <a class="button secondary" href={app.supportUrl}>지원 페이지</a>
+      <a class="button subtle" href={mailtoForApp(app)}>개인정보 문의</a>
+    </div>
+  </section>
+  <section class="section narrow">
+    <article class="prose">
+      <Privacy />
+    </article>
+  </section>
+</SiteLayout>
+
+<style>
+  .policy-header {
+    display: grid;
+    gap: 16px;
+    justify-items: start;
+  }
+
+  .policy-header img {
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+  }
+</style>

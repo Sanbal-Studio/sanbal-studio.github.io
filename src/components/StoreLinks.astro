@@ -1,0 +1,34 @@
+---
+import { isDownloadAvailable, type AppInfo } from '../data/apps';
+
+interface Props {
+  app: AppInfo;
+}
+
+const { app } = Astro.props;
+const available = isDownloadAvailable(app);
+---
+
+<div class="button-row store-links" aria-label={`${app.name} 다운로드 링크`}>
+  {
+    available && app.appStoreUrl && (
+      <a class="button primary" href={app.appStoreUrl} target="_blank" rel="noreferrer">
+        App Store
+      </a>
+    )
+  }
+  {
+    available && app.googlePlayUrl && (
+      <a class="button primary" href={app.googlePlayUrl} target="_blank" rel="noreferrer">
+        Google Play
+      </a>
+    )
+  }
+  {!available && <span class="status-pill">출시 준비 중</span>}
+</div>
+
+<style>
+  .store-links {
+    flex-wrap: wrap;
+  }
+</style>

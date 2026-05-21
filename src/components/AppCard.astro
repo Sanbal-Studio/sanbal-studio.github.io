@@ -1,0 +1,73 @@
+---
+import StoreLinks from './StoreLinks.astro';
+import type { AppInfo } from '../data/apps';
+
+interface Props {
+  app: AppInfo;
+}
+
+const { app } = Astro.props;
+---
+
+<article class="app-card">
+  <a class="app-card__main" href={`/apps/${app.slug}`} aria-label={`${app.name} 상세 페이지`}>
+    <img class="app-card__icon" src={app.icon} alt={`${app.name} 앱 아이콘`} width="86" height="86" loading="lazy" />
+    <div>
+      <span class="status-pill">{app.status === 'published' ? '공개 중' : '출시 준비 중'}</span>
+      <h3>{app.name}</h3>
+      <p>{app.summary}</p>
+    </div>
+  </a>
+  <div class="app-card__actions">
+    <StoreLinks app={app} />
+    <a class="button subtle" href={app.supportUrl}>지원</a>
+    <a class="button subtle" href={app.privacyUrl}>개인정보</a>
+  </div>
+</article>
+
+<style>
+  .app-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    display: grid;
+    gap: 22px;
+    padding: 24px;
+  }
+
+  .app-card__main {
+    color: inherit;
+    display: grid;
+    gap: 18px;
+    grid-template-columns: auto 1fr;
+    text-decoration: none;
+  }
+
+  .app-card__icon {
+    border-radius: 20px;
+    box-shadow: 0 12px 30px rgba(22, 31, 26, 0.16);
+  }
+
+  .app-card h3 {
+    margin-top: 12px;
+  }
+
+  .app-card p {
+    color: var(--muted);
+    margin: 8px 0 0;
+  }
+
+  .app-card__actions {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  @media (max-width: 560px) {
+    .app-card__main {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

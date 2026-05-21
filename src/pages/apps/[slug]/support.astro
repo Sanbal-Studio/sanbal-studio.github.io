@@ -1,0 +1,82 @@
+---
+import SiteLayout from '../../../layouts/SiteLayout.astro';
+import StoreLinks from '../../../components/StoreLinks.astro';
+import { apps, mailtoForApp, type AppInfo } from '../../../data/apps';
+
+export function getStaticPaths() {
+  return apps.map((app) => ({
+    params: { slug: app.slug },
+    props: { app },
+  }));
+}
+
+interface Props {
+  app: AppInfo;
+}
+
+const { app } = Astro.props;
+const supportModules = import.meta.glob('../../../content/apps/*/support.mdx');
+const supportPath = `../../../content/apps/${app.slug}/support.mdx`;
+const Support = ((await supportModules[supportPath]()) as { default: never }).default;
+---
+
+<SiteLayout title={`${app.name} 지원`} description={`${app.name} 지원, FAQ, 문의 안내`} image={app.icon}>
+  <section class="section support-layout">
+    <aside class="support-panel" aria-label={`${app.name} 지원 요약`}>
+      <img src={app.icon} alt={`${app.name} 앱 아이콘`} width="86" height="86" />
+      <h1>{app.name} 지원</h1>
+      <p>{app.summary}</p>
+      <a class="button primary" href={mailtoForApp(app)}>이메일 문의</a>
+      <StoreLinks app={app} />
+      <a class="button secondary" href={`/apps/${app.slug}`}>앱 상세 보기</a>
+      <a class="button subtle" href={app.privacyUrl}>개인정보처리방침</a>
+    </aside>
+    <article class="prose">
+      <Support />
+    </article>
+  </section>
+</SiteLayout>
+
+<style>
+  .support-layout {
+    align-items: start;
+    display: grid;
+    gap: 44px;
+    grid-template-columns: 330px minmax(0, 1fr);
+  }
+
+  .support-panel {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    display: grid;
+    gap: 14px;
+    padding: 24px;
+    position: sticky;
+    top: 96px;
+  }
+
+  .support-panel img {
+    border-radius: 20px;
+  }
+
+  .support-panel h1 {
+    font-size: 2rem;
+  }
+
+  .support-panel p {
+    color: var(--muted);
+    margin: 0;
+  }
+
+  @media (max-width: 860px) {
+    .support-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .support-panel {
+      position: static;
+    }
+  }
+</style>
