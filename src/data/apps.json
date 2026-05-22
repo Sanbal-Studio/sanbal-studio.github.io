@@ -19,15 +19,19 @@
       "icon": "/assets/apps/not-todo/icon.png",
       "screenshots": [
         {
-          "src": "/assets/apps/not-todo/home.png",
+          "src": "/assets/apps/not-todo/screenshot_1.png",
           "alt": "Not Todo 홈 화면"
         },
         {
-          "src": "/assets/apps/not-todo/add.png",
+          "src": "/assets/apps/not-todo/screenshot_2.png",
+          "alt": "Not Todo 홈 화면 2"
+        },
+        {
+          "src": "/assets/apps/not-todo/screenshot_3.png",
           "alt": "Not Todo 항목 추가 화면"
         },
         {
-          "src": "/assets/apps/not-todo/history.png",
+          "src": "/assets/apps/not-todo/screenshot_4.png",
           "alt": "Not Todo 기록 화면"
         }
       ],
