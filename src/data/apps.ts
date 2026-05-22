@@ -30,6 +30,7 @@ export interface AppInfo {
   screenshots: AppScreenshot[];
   appStoreUrl: string;
   googlePlayUrl: string;
+  supportEmail?: string;
   supportUrl: string;
   privacyUrl: string;
 }
@@ -49,12 +50,13 @@ export function getAppBySlug(slug: string) {
 }
 
 export function mailtoForApp(app: AppInfo) {
+  const recipient = app.supportEmail ?? studio.email;
   const subject = encodeURIComponent(`[${app.name}] 문의`);
   const body = encodeURIComponent(
     `${app.name} 관련 문의입니다.\n\n사용 중인 기기와 앱 버전:\n문의 내용:`,
   );
 
-  return `mailto:${studio.email}?subject=${subject}&body=${body}`;
+  return `mailto:${recipient}?subject=${subject}&body=${body}`;
 }
 
 export function isDownloadAvailable(app: AppInfo) {
