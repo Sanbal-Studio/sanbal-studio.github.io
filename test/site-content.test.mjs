@@ -13,18 +13,18 @@ const exists = (path) => existsSync(new URL(path, root));
 describe('Sanbal Studio site content contract', () => {
   const loadContent = () => readJson('src/data/apps.json');
 
-  it('keeps the first launch apps required by the PRD', () => {
+  it('keeps the configured portfolio apps', () => {
     const content = loadContent();
     const slugs = content.apps.map((app) => app.slug).sort();
 
-    assert.deepEqual(slugs, ['not-todo', 'walk-bingo']);
+    assert.deepEqual(slugs, ['not-todo', 'picmory', 'walk-bingo']);
   });
 
   it('provides studio contact links for the home and contact pages', () => {
     const content = loadContent();
 
     assert.equal(content.studio.email, 'sanbal-studio@ksanbal.trade');
-    assert.match(content.studio.links.threads, /^https:\/\/www\.threads\.net\//);
+    assert.match(content.studio.links.threads, /^https:\/\/www\.threads\.com\//);
     assert.match(content.studio.links.x, /^https:\/\/x\.com\//);
   });
 
@@ -67,12 +67,12 @@ describe('Sanbal Studio site content contract', () => {
     }
   });
 
-  it('hides download calls to action for coming soon apps', () => {
+  it('publishes the Walk Bingo App Store link', () => {
     const content = loadContent();
     const walkBingo = content.apps.find((app) => app.slug === 'walk-bingo');
 
-    assert.equal(walkBingo.status, 'comingSoon');
-    assert.equal(walkBingo.appStoreUrl, '');
+    assert.equal(walkBingo.status, 'published');
+    assert.equal(walkBingo.appStoreUrl, 'https://apps.apple.com/kr/app/산책빙고/id6774197634');
     assert.equal(walkBingo.googlePlayUrl, '');
   });
 });

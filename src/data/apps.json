@@ -78,6 +78,32 @@
       "googlePlayUrl": "",
       "supportUrl": "/apps/not-todo/support",
       "privacyUrl": "/apps/not-todo/privacy"
+    },
+    {
+      "slug": "walk-bingo",
+      "name": "산책빙고",
+      "status": "published",
+      "tagline": "산책 중 만난 장면으로 채우는 빙고",
+      "summary": "사진 인증을 부담스럽게 만들지 않고, 산책에서 발견한 순간을 25칸 빙고와 공유 카드로 남기는 앱입니다.",
+      "icon": "/assets/apps/walk-bingo/icon.png",
+      "screenshots": [
+        {
+          "src": "/assets/apps/walk-bingo/board-preview.svg",
+          "alt": "산책빙고 보드 화면 예시"
+        },
+        {
+          "src": "/assets/apps/walk-bingo/share-preview.svg",
+          "alt": "산책빙고 공유 카드 예시"
+        },
+        {
+          "src": "/assets/apps/walk-bingo/camera-illustration.png",
+          "alt": "산책빙고 카메라 일러스트"
+        }
+      ],
+      "appStoreUrl": "https://apps.apple.com/kr/app/산책빙고/id6774197634",
+      "googlePlayUrl": "",
+      "supportUrl": "/apps/walk-bingo/support",
+      "privacyUrl": "/apps/walk-bingo/privacy"
     }
   ]
 }
