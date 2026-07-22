@@ -1,24 +1,39 @@
 ---
 import type { AppInfo } from '../data/apps';
+import ResponsiveImage from './ResponsiveImage.astro';
 
 interface Props {
   app: AppInfo;
 }
 
 const { app } = Astro.props;
+const headingId = `${app.slug}-screenshots-title`;
 ---
 
 {
   app.screenshots.length > 0 && (
-    <section class="screenshot-section" aria-labelledby="screenshots-title">
+    <section class="screenshot-section" aria-labelledby={headingId}>
       <div class="section-heading">
-        <p class="eyebrow">Preview</p>
-        <h2 id="screenshots-title">{app.name} 화면</h2>
+        <p class="eyebrow" lang="en">Preview</p>
+        <h2 id={headingId}>{app.name} 화면</h2>
       </div>
-      <div class="screenshot-grid">
+      <div
+        class:list={['screenshot-grid', { 'screenshot-grid--single': app.screenshots.length === 1 }]}
+        role="region"
+        aria-label={`${app.name} 앱 화면 목록`}
+        tabindex="0"
+      >
         {app.screenshots.map((screenshot) => (
-          <figure>
-            <img src={screenshot.src} alt={screenshot.alt} loading="lazy" />
+          <figure style={`--screenshot-ratio: ${screenshot.width ?? 1320} / ${screenshot.height ?? 2868}`}>
+            <ResponsiveImage
+              src={screenshot.src}
+              alt={screenshot.alt}
+              width={screenshot.width ?? 1320}
+              height={screenshot.height ?? 2868}
+              widths={[660, 990]}
+              sizes="(max-width: 680px) 82vw, (max-width: 900px) 50vw, 33vw"
+              loading="lazy"
+            />
           </figure>
         ))}
       </div>
@@ -28,39 +43,97 @@ const { app } = Astro.props;
 
 <style>
   .screenshot-section {
-    margin-top: 72px;
+    min-width: 0;
   }
 
   .section-heading {
-    margin-bottom: 24px;
+    margin-bottom: var(--space-8);
   }
 
   .screenshot-grid {
     display: grid;
-    gap: 18px;
+    gap: var(--space-6);
     grid-template-columns: repeat(3, minmax(0, 1fr));
+    outline: none;
+  }
+
+  .screenshot-grid--single {
+    grid-template-columns: minmax(0, 22rem);
   }
 
   figure {
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 8px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-artifact);
     margin: 0;
     overflow: hidden;
-    padding: 10px;
+    padding: var(--space-3);
+    scroll-snap-align: start;
+    transition:
+      box-shadow var(--motion-standard),
+      transform var(--motion-standard);
   }
 
-  img {
-    aspect-ratio: 9 / 16;
-    border-radius: 6px;
-    height: auto;
+  figure :global(picture) {
+    aspect-ratio: var(--screenshot-ratio, 1320 / 2868);
+    border-radius: var(--radius-panel);
+    overflow: hidden;
+  }
+
+  figure :global(picture > img) {
+    height: 100%;
     object-fit: cover;
     width: 100%;
   }
 
-  @media (max-width: 820px) {
+  .screenshot-grid:focus-visible {
+    outline: var(--space-1) solid var(--color-focus);
+    outline-offset: var(--space-2);
+  }
+
+  @media (hover: hover) {
+    figure:hover {
+      box-shadow: var(--shadow-subtle);
+      transform: translateY(calc(-1 * var(--space-1)));
+    }
+  }
+
+  @media (max-width: 56.25rem) {
     .screenshot-grid {
-      grid-template-columns: 1fr;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .screenshot-grid--single {
+      grid-template-columns: minmax(0, 22rem);
+    }
+  }
+
+  @media (max-width: 42.5rem) {
+    .screenshot-grid {
+      grid-auto-columns: 82%;
+      grid-auto-flow: column;
+      grid-template-columns: none;
+      overflow-x: auto;
+      overscroll-behavior-inline: contain;
+      padding: var(--space-2) var(--space-2) var(--space-5);
+      scroll-padding-inline: var(--space-2);
+      scroll-snap-type: inline mandatory;
+      scrollbar-color: var(--color-line-strong) transparent;
+      scrollbar-width: thin;
+    }
+
+    .screenshot-grid--single {
+      grid-template-columns: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    figure {
+      transition: none;
+    }
+
+    figure:hover {
+      transform: none;
     }
   }
 </style>

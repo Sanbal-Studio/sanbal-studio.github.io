@@ -1,4 +1,6 @@
 ---
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import ResponsiveImage from '../../../components/ResponsiveImage.astro';
 import SiteLayout from '../../../layouts/SiteLayout.astro';
 import { apps, mailtoForApp, type AppInfo } from '../../../data/apps';
 
@@ -24,18 +26,41 @@ const Privacy = ((await privacyModules[privacyPath]()) as { default: never }).de
   description={`${app.name} 앱의 개인정보 처리 기준`}
   image={app.icon}
 >
-  <section class="section narrow policy-header">
-    <p class="eyebrow">Privacy Policy</p>
-    <img src={app.icon} alt={`${app.name} 앱 아이콘`} width="72" height="72" />
-    <h1>{app.name} 개인정보처리방침</h1>
-    <p class="lead">스토어 제출용 Privacy Policy URL로 사용할 수 있는 앱별 문서입니다.</p>
-    <div class="button-row">
-      <a class="button secondary" href={app.supportUrl}>지원 페이지</a>
-      <a class="button subtle" href={mailtoForApp(app)}>개인정보 문의</a>
+  <header class="section narrow policy-header">
+    <Breadcrumbs
+      items={[
+        { label: '홈', href: '/' },
+        { label: '앱', href: '/#apps' },
+        { label: app.name, href: `/apps/${app.slug}` },
+        { label: '개인정보처리방침' },
+      ]}
+    />
+    <div class="policy-header__identity">
+      <ResponsiveImage
+        class="policy-app-icon"
+        src={app.icon}
+        alt={`${app.name} 앱 아이콘`}
+        width="1024"
+        height="1024"
+        widths={[192, 384]}
+        sizes="72px"
+      />
+      <div class="policy-header__copy">
+        <p class="eyebrow" lang="en">Privacy Policy</p>
+        <h1>
+          <span>{app.name}</span>
+          <span>개인정보처리방침</span>
+        </h1>
+        <p class="lead">앱을 사용하며 처리되는 정보와 이용자에게 보장되는 선택권을 안내합니다.</p>
+        <div class="button-row">
+          <a class="button secondary" href={app.supportUrl} aria-label={`${app.name} 지원 페이지`}>지원 페이지</a>
+          <a class="button subtle" href={mailtoForApp(app)} aria-label={`${app.name} 개인정보 이메일 문의`}>개인정보 문의</a>
+        </div>
+      </div>
     </div>
-  </section>
+  </header>
   <section class="section narrow">
-    <article class="prose">
+    <article class="prose policy-document">
       <Privacy />
     </article>
   </section>
@@ -44,12 +69,79 @@ const Privacy = ((await privacyModules[privacyPath]()) as { default: never }).de
 <style>
   .policy-header {
     display: grid;
-    gap: 16px;
-    justify-items: start;
+    gap: var(--space-8);
   }
 
-  .policy-header img {
-    border-radius: 18px;
-    box-shadow: var(--shadow);
+  .policy-header__identity {
+    align-items: start;
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: auto minmax(0, 1fr);
+    min-width: 0;
+  }
+
+  :global(.policy-app-icon) {
+    border-radius: var(--radius-artifact);
+    box-shadow: var(--shadow-elevated);
+    height: var(--size-icon-md);
+    overflow: hidden;
+    width: var(--size-icon-md);
+  }
+
+  .policy-header__copy {
+    display: grid;
+    gap: var(--space-4);
+    justify-items: start;
+    min-width: 0;
+  }
+
+  .policy-header h1 {
+    font-size: var(--text-h1);
+    text-wrap: balance;
+  }
+
+  .policy-header h1 span {
+    display: block;
+  }
+
+  .policy-header .eyebrow,
+  .policy-header .lead {
+    margin: 0;
+  }
+
+  .policy-header .lead {
+    text-wrap: pretty;
+  }
+
+  .policy-document {
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-panel);
+    min-width: 0;
+    padding: clamp(var(--space-6), 4vw, var(--space-12));
+  }
+
+  .policy-document :global(a),
+  .policy-document :global(code),
+  .policy-document :global(pre) {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .policy-document :global(pre),
+  .policy-document :global(table) {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .policy-document :global(table) {
+    display: block;
+    overscroll-behavior-inline: contain;
+  }
+
+  @media (max-width: 680px) {
+    .policy-header__identity {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

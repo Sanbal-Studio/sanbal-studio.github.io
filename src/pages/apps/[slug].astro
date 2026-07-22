@@ -1,4 +1,6 @@
 ---
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ResponsiveImage from '../../components/ResponsiveImage.astro';
 import ScreenshotGallery from '../../components/ScreenshotGallery.astro';
 import StoreLinks from '../../components/StoreLinks.astro';
 import SiteLayout from '../../layouts/SiteLayout.astro';
@@ -23,26 +25,63 @@ const Detail = ((await detailModules[detailPath]()) as { default: never }).defau
 
 <SiteLayout title={app.name} description={app.summary} image={app.icon}>
   <section class="app-hero section">
+    <div class="app-hero__breadcrumbs">
+      <Breadcrumbs
+        items={[
+          { label: '홈', href: '/' },
+          { label: '앱', href: '/#apps' },
+          { label: app.name },
+        ]}
+      />
+    </div>
     <div class="app-hero__copy">
-      <p class="eyebrow">App</p>
-      <img class="app-icon" src={app.icon} alt={`${app.name} 앱 아이콘`} width="104" height="104" />
+      <p class="eyebrow" lang="en">App</p>
+      <ResponsiveImage
+        class="app-icon"
+        src={app.icon}
+        alt={`${app.name} 앱 아이콘`}
+        width="1024"
+        height="1024"
+        widths={[192, 384]}
+        sizes="104px"
+      />
       <h1>{app.name}</h1>
       <p class="lead">{app.tagline}</p>
       <StoreLinks app={app} />
       <div class="button-row">
-        <a class="button secondary" href={app.supportUrl}>지원 페이지</a>
-        <a class="button secondary" href={app.privacyUrl}>개인정보처리방침</a>
+        <a class="button secondary" href={app.supportUrl} aria-label={`${app.name} 지원 페이지`}>지원 페이지</a>
+        <a class="button secondary" href={app.privacyUrl} aria-label={`${app.name} 개인정보처리방침`}>개인정보처리방침</a>
       </div>
     </div>
-    <div class="app-hero__media" aria-hidden="true">
-      {app.screenshots.slice(0, 2).map((screenshot) => <img src={screenshot.src} alt="" />)}
+    <div
+      class:list={[
+        'app-hero__media',
+        `app-hero__media--${app.slug}`,
+        { 'app-hero__media--single': app.screenshots.length === 1 },
+      ]}
+      aria-hidden="true"
+    >
+      {
+        app.screenshots.slice(0, 2).map((screenshot, index) => (
+          <ResponsiveImage
+            src={screenshot.src}
+            alt=""
+            width={screenshot.width ?? 1320}
+            height={screenshot.height ?? 2868}
+            widths={[660, 990]}
+            sizes="(max-width: 900px) 58vw, 34vw"
+            loading={index === 0 ? 'eager' : 'lazy'}
+            fetchpriority={index === 0 ? 'high' : 'auto'}
+          />
+        ))
+      }
     </div>
   </section>
 
   <section class="section narrow">
-    <div class="prose">
+    <article class="prose app-story">
       <Detail />
-    </div>
+    </article>
   </section>
 
   <section class="section">
@@ -54,51 +93,143 @@ const Detail = ((await detailModules[detailPath]()) as { default: never }).defau
   .app-hero {
     align-items: center;
     display: grid;
-    gap: 48px;
-    grid-template-columns: minmax(0, 1fr) minmax(320px, 0.8fr);
+    gap: var(--space-12);
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
   }
 
-  .app-icon {
-    border-radius: 24px;
-    box-shadow: var(--shadow);
-    margin-bottom: 24px;
+  .app-hero__breadcrumbs {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  :global(.app-icon) {
+    border-radius: var(--radius-artifact);
+    box-shadow: var(--shadow-elevated);
+    height: var(--size-icon-xl);
+    margin-bottom: var(--space-2);
+    overflow: hidden;
+    width: var(--size-icon-xl);
   }
 
   .app-hero__copy {
     display: grid;
-    gap: 18px;
+    gap: var(--space-5);
     justify-items: start;
+    min-width: 0;
+  }
+
+  .app-hero__copy h1 {
+    font-size: var(--text-h1);
+    text-wrap: balance;
+  }
+
+  .app-hero__copy .lead {
+    margin: 0;
+    text-wrap: pretty;
   }
 
   .app-hero__media {
     align-items: center;
     display: grid;
-    gap: 18px;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-rows: var(--space-8) auto var(--space-8);
+    min-width: 0;
+    overflow: clip;
+    padding: var(--space-8);
+    border-radius: var(--radius-artifact);
   }
 
-  .app-hero__media img {
-    aspect-ratio: 9 / 16;
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    box-shadow: var(--shadow);
-    object-fit: cover;
-    padding: 8px;
+  .app-hero__media--picmory {
+    background: var(--color-product-picmory);
+  }
+
+  .app-hero__media--not-todo {
+    background: var(--color-product-not-todo);
+  }
+
+  .app-hero__media--walk-bingo {
+    background: var(--color-product-walk-bingo);
+  }
+
+  .app-hero__media :global(picture) {
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-panel);
+    box-shadow: var(--shadow-elevated);
+    grid-row: 2;
+    overflow: hidden;
+    padding: var(--space-2);
     width: 100%;
   }
 
-  .app-hero__media img:nth-child(2) {
-    margin-top: 56px;
+  .app-hero__media :global(picture > img) {
+    height: auto;
+    width: 100%;
   }
 
-  @media (max-width: 880px) {
+  .app-hero__media :global(picture:first-child) {
+    grid-column: 1 / 8;
+    transform: rotate(-4deg) translateY(var(--space-4));
+  }
+
+  .app-hero__media :global(picture:nth-child(2)) {
+    grid-column: 6 / 13;
+    transform: rotate(4deg) translateY(calc(var(--space-8) * -1));
+  }
+
+  .app-hero__media--single :global(picture:first-child) {
+    grid-column: 3 / 11;
+    transform: rotate(-3deg);
+  }
+
+  .app-story {
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-panel);
+    min-width: 0;
+    padding: clamp(var(--space-6), 4vw, var(--space-12));
+  }
+
+  @media (max-width: 900px) {
     .app-hero {
       grid-template-columns: 1fr;
     }
 
     .app-hero__media {
-      max-width: 540px;
+      margin-inline: auto;
+      max-width: var(--layout-narrow);
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 680px) {
+    .app-hero {
+      gap: var(--space-8);
+    }
+
+    .app-hero__media {
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+      padding: var(--space-6) var(--space-4);
+    }
+
+    .app-hero__media :global(picture:first-child) {
+      grid-column: 1 / 6;
+    }
+
+    .app-hero__media :global(picture:nth-child(2)) {
+      grid-column: 4 / 9;
+      transform: rotate(4deg) translateY(calc(var(--space-4) * -1));
+    }
+
+    .app-hero__media--single :global(picture:first-child) {
+      grid-column: 2 / 8;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .app-hero__media :global(picture:first-child),
+    .app-hero__media :global(picture:nth-child(2)) {
+      transform: none;
     }
   }
 </style>

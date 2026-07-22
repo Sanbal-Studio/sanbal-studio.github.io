@@ -1,73 +1,428 @@
 ---
+import ResponsiveImage from '../components/ResponsiveImage.astro';
 import SiteLayout from '../layouts/SiteLayout.astro';
 import { apps, studio } from '../data/apps';
 ---
 
-<SiteLayout title="Contact" description="Sanbal Studio 전체 문의 허브">
-  <section class="section narrow contact-header">
-    <p class="eyebrow">Contact</p>
-    <h1>Sanbal Studio 문의</h1>
-    <p class="lead">
-      앱 관련 문의는 앱별 지원 페이지를 먼저 확인해 주세요. 전체 문의와 제휴, 스토어 제출 관련 연락은 이메일로 받을 수 있습니다.
-    </p>
-    <div class="button-row">
-      <a class="button primary" href={`mailto:${studio.email}`}>이메일 보내기</a>
-      <a class="button secondary" href={studio.links.threads} target="_blank" rel="noreferrer">Threads</a>
-      <a class="button secondary" href={studio.links.x} target="_blank" rel="noreferrer">X</a>
-    </div>
+<SiteLayout title="문의" description="Sanbal Studio와 앱별 지원·제휴 문의 방법을 확인하세요.">
+  <section class="section contact-hero" aria-labelledby="contact-title">
+    <header class="contact-intro">
+      <p class="eyebrow" lang="en">Contact</p>
+      <h1 id="contact-title">어떤 도움이<br /> 필요하신가요?</h1>
+      <p class="lead">
+        앱 관련 문의는 앱별 지원 페이지를 먼저 확인해 주세요. 전체 문의와 제휴, 스토어 제출 관련 연락은 이메일로 받을 수 있습니다.
+      </p>
+    </header>
+
+    <address class="general-contact" aria-labelledby="general-contact-title">
+      <div>
+        <p class="general-contact__label" lang="en">General inquiries</p>
+        <h2 id="general-contact-title">전체 문의</h2>
+        <p>앱을 특정하기 어렵거나 Sanbal Studio에 직접 전할 내용이 있다면 이곳으로 보내주세요.</p>
+      </div>
+      <a class="button general-contact__button" href={`mailto:${studio.email}`}>이메일 보내기</a>
+      <a class="general-contact__email" href={`mailto:${studio.email}`}>{studio.email}</a>
+    </address>
   </section>
 
-  <section class="section narrow" aria-labelledby="app-support-title">
-    <p class="eyebrow">App support</p>
-    <h2 id="app-support-title">앱별 지원 페이지</h2>
-    <div class="support-list">
-      {
-        apps.map((app) => (
-          <a href={app.supportUrl}>
-            <img src={app.icon} alt="" width="52" height="52" />
-            <span>
-              <strong>{app.name}</strong>
-              <small>{app.summary}</small>
-            </span>
+  <section class="section support-section" aria-labelledby="app-support-title">
+    <header class="section-heading">
+      <div>
+        <p class="eyebrow" lang="en">App support</p>
+        <h2 id="app-support-title">앱별 지원 페이지</h2>
+      </div>
+      <p>앱 이름을 선택하면 해당 앱의 문의 방법과 필요한 정보를 바로 확인할 수 있습니다.</p>
+    </header>
+
+    <div class="support-layout">
+      <ul class="support-list">
+        {
+          apps.map((app) => (
+            <li>
+              <a class="support-link" href={app.supportUrl} aria-label={`${app.name} 지원 페이지 보기`}>
+                <ResponsiveImage
+                  class="support-link__icon"
+                  src={app.icon}
+                  alt=""
+                  width="1024"
+                  height="1024"
+                  widths={[192, 384]}
+                  sizes="56px"
+                  loading="lazy"
+                />
+                <span class="support-link__copy">
+                  <span class="support-link__title-row">
+                    <strong>{app.name}</strong>
+                    <small data-status={app.status}>{app.status === 'published' ? '공개 중' : '출시 준비 중'}</small>
+                  </span>
+                  <span>{app.tagline}</span>
+                </span>
+                <svg class="support-link__arrow" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M5 12h14M13 6l6 6-6 6" />
+                </svg>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <aside class="social-panel" aria-labelledby="social-title">
+        <p class="eyebrow" lang="en">Studio updates</p>
+        <h3 id="social-title">만드는 과정을<br /> 함께 보세요</h3>
+        <p>새 앱과 업데이트 소식은 Sanbal Studio의 소셜 채널에서 전합니다.</p>
+        <nav aria-label="Sanbal Studio 소셜 채널">
+          <a href={studio.links.threads} target="_blank" rel="noopener noreferrer" aria-label="Threads 새 창에서 열기">
+            <span lang="en">Threads</span>
+            <svg class="external-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M9 6h9v9M18 6 6 18" />
+            </svg>
           </a>
-        ))
-      }
+          <a href={studio.links.x} target="_blank" rel="noopener noreferrer" aria-label="X 새 창에서 열기">
+            <span lang="en">X</span>
+            <svg class="external-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M9 6h9v9M18 6 6 18" />
+            </svg>
+          </a>
+        </nav>
+      </aside>
     </div>
   </section>
 </SiteLayout>
 
 <style>
-  .contact-header {
+  .contact-hero {
+    align-items: end;
     display: grid;
-    gap: 18px;
+    gap: var(--space-12);
+    grid-template-columns: minmax(0, 1.35fr) minmax(18rem, 0.65fr);
+  }
+
+  .contact-intro {
+    max-inline-size: var(--layout-narrow);
+    overflow-wrap: normal;
+    word-break: keep-all;
+  }
+
+  .contact-intro h1 {
+    font-size: var(--text-h1);
+    text-wrap: balance;
+  }
+
+  .contact-intro .lead {
+    margin-block: var(--space-6) 0;
+    max-inline-size: 62ch;
+  }
+
+  .general-contact {
+    background:
+      radial-gradient(circle at 100% 0%, var(--color-on-dark-surface), transparent 58%),
+      var(--color-brand-strong);
+    border: 1px solid var(--color-on-dark-line);
+    border-radius: var(--radius-panel);
+    color: var(--color-on-dark);
+    display: grid;
+    font-style: normal;
+    gap: var(--space-5);
+    overflow: hidden;
+    padding: var(--space-8);
+  }
+
+  .general-contact__label {
+    color: var(--color-on-dark-muted);
+    font-size: var(--text-label);
+    font-weight: 750;
+    letter-spacing: 0.08em;
+    margin: 0 0 var(--space-3);
+    text-transform: uppercase;
+  }
+
+  .general-contact h2 {
+    color: inherit;
+    font-family: var(--font-display);
+    font-size: var(--text-h3);
+  }
+
+  .general-contact p:not(.general-contact__label) {
+    color: var(--color-on-dark-muted);
+    font-size: var(--text-body-sm);
+    margin: var(--space-3) 0 0;
+    overflow-wrap: normal;
+    word-break: keep-all;
+  }
+
+  .general-contact__button {
+    background: var(--color-on-dark);
+    border-color: var(--color-on-dark);
+    color: var(--color-brand-strong);
+    inline-size: 100%;
+  }
+
+  .general-contact__button:hover {
+    background: var(--color-brand-soft);
+    border-color: var(--color-brand-soft);
+  }
+
+  .general-contact__email {
+    align-items: center;
+    color: var(--color-on-dark-muted);
+    display: inline-flex;
+    font-family: var(--font-mono);
+    font-size: var(--text-body-sm);
+    min-block-size: calc(var(--space-10) + var(--space-1));
+    overflow-wrap: anywhere;
+    transition: color var(--motion-fast);
+  }
+
+  .general-contact__email:hover {
+    color: var(--color-on-dark);
+  }
+
+  .support-section {
+    padding-block-start: var(--space-20);
+  }
+
+  .section-heading {
+    align-items: end;
+    display: grid;
+    gap: var(--space-8);
+    grid-template-columns: minmax(0, 1.3fr) minmax(18rem, 0.7fr);
+    margin-block-end: var(--space-8);
+  }
+
+  .section-heading h2 {
+    font-size: var(--text-h2);
+    text-wrap: balance;
+  }
+
+  .section-heading > p {
+    color: var(--color-ink-muted);
+    margin: 0;
+    max-inline-size: 38ch;
+    overflow-wrap: normal;
+    text-wrap: pretty;
+    word-break: keep-all;
+  }
+
+  .support-layout {
+    align-items: start;
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: minmax(0, 2fr) minmax(16rem, 1fr);
   }
 
   .support-list {
-    display: grid;
-    gap: 12px;
-    margin-top: 24px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-panel);
+    list-style: none;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
   }
 
-  .support-list a {
+  .support-list li + li {
+    border-block-start: 1px solid var(--color-line);
+  }
+
+  .support-link {
     align-items: center;
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 8px;
     color: inherit;
     display: grid;
-    gap: 14px;
-    grid-template-columns: auto 1fr;
-    padding: 16px;
+    gap: var(--space-5);
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    min-block-size: calc(var(--space-10) + var(--space-1));
+    padding: var(--space-5) var(--space-6);
     text-decoration: none;
+    transition: background-color var(--motion-fast);
   }
 
-  .support-list img {
-    border-radius: 12px;
+  .support-link:hover {
+    background: var(--color-surface-muted);
   }
 
-  .support-list small {
-    color: var(--muted);
-    display: block;
-    margin-top: 2px;
+  .support-link:focus-visible {
+    outline-offset: calc(-1 * var(--space-1));
+    position: relative;
+    z-index: 1;
+  }
+
+  :global(.support-link__icon) {
+    border-radius: var(--radius-control);
+    box-shadow: var(--shadow-subtle);
+    height: var(--size-icon-sm);
+    min-width: var(--size-icon-sm);
+    overflow: hidden;
+    width: var(--size-icon-sm);
+  }
+
+  .support-link__copy {
+    color: var(--color-ink-muted);
+    display: grid;
+    font-size: var(--text-body-sm);
+    gap: var(--space-2);
+    min-inline-size: 0;
+    overflow-wrap: normal;
+    text-wrap: pretty;
+    word-break: keep-all;
+  }
+
+  .support-link__title-row {
+    align-items: baseline;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-3);
+  }
+
+  .support-link__title-row strong {
+    color: var(--color-ink);
+    font-size: var(--text-body-lg);
+    line-height: 1.3;
+  }
+
+  .support-link__title-row small {
+    color: var(--color-brand);
+    font-size: var(--text-label);
+    font-weight: 750;
+    letter-spacing: 0.04em;
+  }
+
+  .support-link__title-row small[data-status='comingSoon'] {
+    color: var(--color-warning);
+  }
+
+  .support-link__arrow {
+    color: var(--color-brand);
+    fill: none;
+    height: var(--space-6);
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.75;
+    transition: transform var(--motion-standard);
+    width: var(--space-6);
+  }
+
+  .support-link:hover .support-link__arrow {
+    transform: translateX(var(--space-1));
+  }
+
+  .social-panel {
+    background: var(--color-surface-muted);
+    border-radius: var(--radius-panel);
+    box-shadow: var(--shadow-elevated);
+    padding: var(--space-8);
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-6));
+  }
+
+  .social-panel h3 {
+    font-family: var(--font-display);
+    font-size: var(--text-h3);
+    overflow-wrap: normal;
+    text-wrap: balance;
+    word-break: keep-all;
+  }
+
+  .social-panel > p:not(.eyebrow) {
+    color: var(--color-ink-muted);
+    font-size: var(--text-body-sm);
+    margin: var(--space-4) 0 var(--space-5);
+    overflow-wrap: normal;
+    word-break: keep-all;
+  }
+
+  .social-panel nav {
+    border-block-start: 1px solid var(--color-line-strong);
+  }
+
+  .social-panel nav a {
+    align-items: center;
+    border-block-end: 1px solid var(--color-line-strong);
+    color: var(--color-ink);
+    display: flex;
+    font-weight: 700;
+    justify-content: space-between;
+    min-block-size: calc(var(--space-10) + var(--space-1));
+    padding-inline: var(--space-1);
+    text-decoration: none;
+    transition: color var(--motion-fast);
+  }
+
+  .social-panel nav a:hover {
+    color: var(--color-brand);
+  }
+
+  .external-icon {
+    fill: none;
+    height: var(--space-5);
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.75;
+    transition: transform var(--motion-standard);
+    width: var(--space-5);
+  }
+
+  .social-panel nav a:hover .external-icon {
+    transform: translate(var(--space-1), calc(var(--space-1) * -1));
+  }
+
+  @media (max-width: 56.25rem) {
+    .contact-hero,
+    .section-heading,
+    .support-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .contact-hero,
+    .section-heading {
+      gap: var(--space-8);
+    }
+
+    .general-contact {
+      max-inline-size: var(--layout-narrow);
+    }
+
+    .section-heading > p {
+      max-inline-size: 62ch;
+    }
+
+    .social-panel {
+      position: static;
+    }
+  }
+
+  @media (max-width: 42.5rem) {
+    .contact-intro h1 br,
+    .social-panel h3 br {
+      display: none;
+    }
+
+    .general-contact,
+    .social-panel {
+      padding: var(--space-6);
+    }
+
+    .support-link {
+      align-items: start;
+      gap: var(--space-4);
+      padding: var(--space-5);
+    }
+
+    .support-link__arrow {
+      margin-block-start: var(--space-4);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .support-link__arrow,
+    .external-icon {
+      transition: none;
+    }
+
+    .support-link:hover .support-link__arrow,
+    .social-panel nav a:hover .external-icon {
+      transform: none;
+    }
   }
 </style>

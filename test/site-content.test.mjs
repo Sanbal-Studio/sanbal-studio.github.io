@@ -71,6 +71,7 @@ describe('Sanbal Studio site content contract', () => {
     const content = loadContent();
     const walkBingo = content.apps.find((app) => app.slug === 'walk-bingo');
 
+    assert.ok(walkBingo);
     assert.equal(walkBingo.status, 'published');
     assert.equal(walkBingo.appStoreUrl, 'https://apps.apple.com/kr/app/산책빙고/id6774197634');
     assert.equal(walkBingo.googlePlayUrl, '');

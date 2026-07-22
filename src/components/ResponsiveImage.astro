@@ -1,0 +1,56 @@
+---
+interface Props {
+  src: string;
+  alt: string;
+  width: number | string;
+  height: number | string;
+  widths: number[];
+  sizes: string;
+  class?: string;
+  loading?: 'eager' | 'lazy';
+  decoding?: 'async' | 'auto' | 'sync';
+  fetchpriority?: 'high' | 'low' | 'auto';
+}
+
+const {
+  src,
+  alt,
+  width,
+  height,
+  widths,
+  sizes,
+  class: className,
+  loading,
+  decoding = 'async',
+  fetchpriority,
+} = Astro.props;
+
+const stem = src.replace(/\.[^.]+$/, '');
+const webpSrcset = widths.map((candidateWidth) => `${stem}-${candidateWidth}.webp ${candidateWidth}w`).join(', ');
+---
+
+<picture class={className}>
+  <source type="image/webp" srcset={webpSrcset} sizes={sizes} />
+  <img
+    src={src}
+    alt={alt}
+    width={width}
+    height={height}
+    sizes={sizes}
+    loading={loading}
+    decoding={decoding}
+    fetchpriority={fetchpriority}
+  />
+</picture>
+
+<style>
+  picture {
+    display: block;
+  }
+
+  img {
+    display: block;
+    height: auto;
+    width: 100%;
+  }
+</style>

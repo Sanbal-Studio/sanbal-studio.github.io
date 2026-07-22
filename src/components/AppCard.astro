@@ -1,73 +1,251 @@
 ---
 import StoreLinks from './StoreLinks.astro';
+import ResponsiveImage from './ResponsiveImage.astro';
 import type { AppInfo } from '../data/apps';
 
 interface Props {
   app: AppInfo;
+  wide?: boolean;
 }
 
-const { app } = Astro.props;
+const { app, wide = false } = Astro.props;
+const preview = app.screenshots[0];
 ---
 
-<article class="app-card">
-  <a class="app-card__main" href={`/apps/${app.slug}`} aria-label={`${app.name} 상세 페이지`}>
-    <img class="app-card__icon" src={app.icon} alt={`${app.name} 앱 아이콘`} width="86" height="86" loading="lazy" />
-    <div>
-      <span class="status-pill">{app.status === 'published' ? '공개 중' : '출시 준비 중'}</span>
-      <h3>{app.name}</h3>
+<article class:list={['app-card', { 'app-card--wide': wide }]} data-app={app.slug}>
+  <a class="app-card__main" href={`/apps/${app.slug}`} aria-label={`${app.name} 상세 페이지 보기`}>
+    <div class="app-card__copy">
+      <div class="app-card__identity">
+        <ResponsiveImage
+          class="app-card__icon"
+          src={app.icon}
+          alt={`${app.name} 앱 아이콘`}
+          width="1024"
+          height="1024"
+          widths={[192, 384]}
+          sizes="88px"
+          loading="lazy"
+        />
+        <div>
+          <span class="status-pill" data-status={app.status}>
+            {app.status === 'published' ? '공개 중' : '출시 준비 중'}
+          </span>
+          <h3>{app.name}</h3>
+        </div>
+      </div>
       <p>{app.summary}</p>
+      <span class="app-card__detail" aria-hidden="true">
+        앱 상세 보기
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M4 10h12m-5-5 5 5-5 5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"></path>
+        </svg>
+      </span>
     </div>
+    {
+      preview && (
+        <div
+          class="app-card__media"
+          style={`--screenshot-ratio: ${preview.width ?? 1320} / ${preview.height ?? 2868}`}
+        >
+          <ResponsiveImage
+            src={preview.src}
+            alt={preview.alt}
+            width={preview.width ?? 1320}
+            height={preview.height ?? 2868}
+            widths={[660, 990]}
+            sizes="(max-width: 680px) 80vw, (min-width: 900px) 360px, 44vw"
+            loading="lazy"
+          />
+        </div>
+      )
+    }
   </a>
   <div class="app-card__actions">
     <StoreLinks app={app} />
-    <a class="button subtle" href={app.supportUrl}>지원</a>
-    <a class="button subtle" href={app.privacyUrl}>개인정보</a>
+    <a class="button subtle" href={app.supportUrl} aria-label={`${app.name} 지원 페이지`}>지원</a>
+    <a class="button subtle" href={app.privacyUrl} aria-label={`${app.name} 개인정보처리방침`}>개인정보</a>
   </div>
 </article>
 
 <style>
   .app-card {
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    box-shadow: var(--shadow);
+    --app-tint: var(--color-surface-muted);
+
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-panel);
     display: grid;
-    gap: 22px;
-    padding: 24px;
+    gap: var(--space-6);
+    grid-template-rows: 1fr auto;
+    min-width: 0;
+    padding: var(--space-6);
+  }
+
+  .app-card--wide {
+    grid-column: 1 / -1;
+  }
+
+  .app-card[data-app='picmory'] {
+    --app-tint: var(--color-product-picmory);
+  }
+
+  .app-card[data-app='not-todo'] {
+    --app-tint: var(--color-product-not-todo);
+  }
+
+  .app-card[data-app='walk-bingo'] {
+    --app-tint: var(--color-product-walk-bingo);
   }
 
   .app-card__main {
     color: inherit;
     display: grid;
-    gap: 18px;
-    grid-template-columns: auto 1fr;
+    gap: var(--space-6);
     text-decoration: none;
   }
 
-  .app-card__icon {
-    border-radius: 20px;
-    box-shadow: 0 12px 30px rgba(22, 31, 26, 0.16);
+  .app-card__copy {
+    align-content: start;
+    display: grid;
+    gap: var(--space-5);
+    min-width: 0;
+  }
+
+  .app-card__identity {
+    align-items: center;
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  :global(.app-card__icon) {
+    border-radius: var(--radius-artifact);
+    box-shadow: var(--shadow-elevated);
+    height: var(--size-icon-lg);
+    overflow: hidden;
+    width: var(--size-icon-lg);
   }
 
   .app-card h3 {
-    margin-top: 12px;
+    font-size: var(--text-h3);
+    margin-top: var(--space-3);
+    transition: color var(--motion-fast);
   }
 
   .app-card p {
-    color: var(--muted);
-    margin: 8px 0 0;
+    color: var(--color-ink-muted);
+    font-size: var(--text-body);
+    margin: 0;
+    text-wrap: pretty;
+  }
+
+  .app-card__detail {
+    align-items: center;
+    color: var(--color-brand-strong);
+    display: inline-flex;
+    font-size: var(--text-body-sm);
+    font-weight: 750;
+    gap: var(--space-2);
+    width: fit-content;
+  }
+
+  .app-card__detail svg {
+    height: var(--space-5);
+    transition: transform var(--motion-standard);
+    width: var(--space-5);
+  }
+
+  .app-card__media {
+    align-items: end;
+    aspect-ratio: 16 / 10;
+    background: var(--app-tint);
+    border-radius: var(--radius-artifact);
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    padding: var(--space-4) var(--space-6) 0;
+  }
+
+  .app-card__media :global(picture) {
+    aspect-ratio: var(--screenshot-ratio, 1320 / 2868);
+    border-radius: var(--radius-control) var(--radius-control) 0 0;
+    box-shadow: var(--shadow-elevated);
+    height: 100%;
+    max-width: none;
+    overflow: hidden;
+    transform: translateY(var(--space-2));
+    transition: transform var(--motion-standard);
+    width: auto;
+  }
+
+  .app-card__media :global(picture > img) {
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+  }
+
+  .app-card__main:is(:hover, :focus-visible) h3 {
+    color: var(--color-brand);
+  }
+
+  .app-card__main:is(:hover, :focus-visible) .app-card__media :global(picture) {
+    transform: translateY(var(--space-1));
+  }
+
+  .app-card__main:is(:hover, :focus-visible) .app-card__detail svg {
+    transform: translateX(var(--space-1));
   }
 
   .app-card__actions {
     align-items: center;
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: var(--space-3);
+    padding-top: var(--space-1);
   }
 
-  @media (max-width: 560px) {
-    .app-card__main {
-      grid-template-columns: 1fr;
+  @media (min-width: 56.25rem) {
+    .app-card--wide .app-card__main {
+      align-items: stretch;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr);
+    }
+
+    .app-card--wide .app-card__media {
+      aspect-ratio: auto;
+      min-height: 100%;
+    }
+  }
+
+  @media (max-width: 42.5rem) {
+    .app-card {
+      grid-column: 1;
+      padding: var(--space-5);
+    }
+
+    .app-card__actions,
+    .app-card__actions :global(.store-links) {
+      align-items: stretch;
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .app-card__actions :global(.button) {
+      width: 100%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .app-card__media :global(picture),
+    .app-card__detail svg {
+      transition: none;
+    }
+
+    .app-card__main:is(:hover, :focus-visible) .app-card__media :global(picture) {
+      transform: translateY(var(--space-2));
+    }
+
+    .app-card__main:is(:hover, :focus-visible) .app-card__detail svg {
+      transform: none;
     }
   }
 </style>

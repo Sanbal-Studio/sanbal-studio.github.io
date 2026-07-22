@@ -1,0 +1,101 @@
+---
+export interface BreadcrumbItem {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  items: BreadcrumbItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<nav class="breadcrumbs" aria-label="현재 위치">
+  <ol>
+    {
+      items.map((item, index) => {
+        const isCurrent = index === items.length - 1;
+
+        return (
+          <li>
+            {index > 0 && (
+              <span class="breadcrumbs__separator" aria-hidden="true">/</span>
+            )}
+            {isCurrent || !item.href ? (
+              <span class="breadcrumbs__current" aria-current={isCurrent ? 'page' : undefined}>
+                {item.label}
+              </span>
+            ) : (
+              <a href={item.href}>{item.label}</a>
+            )}
+          </li>
+        );
+      })
+    }
+  </ol>
+</nav>
+
+<style>
+  .breadcrumbs {
+    color: var(--color-ink-muted);
+    font-size: var(--text-body-sm);
+    font-weight: 500;
+    min-width: 0;
+  }
+
+  ol {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--space-2);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  li {
+    align-items: center;
+    display: flex;
+    min-width: 0;
+  }
+
+  a,
+  .breadcrumbs__current {
+    align-items: center;
+    display: inline-flex;
+    min-height: 44px;
+    overflow-wrap: anywhere;
+  }
+
+  a {
+    color: var(--color-ink-muted);
+    justify-content: center;
+    min-width: 44px;
+    padding-inline: var(--space-2);
+    text-decoration: none;
+    transition: color var(--motion-fast);
+  }
+
+  a:hover {
+    color: var(--color-brand-strong);
+  }
+
+  a:focus-visible {
+    border-radius: var(--radius-control);
+    outline: 3px solid var(--color-focus);
+    outline-offset: var(--space-1);
+  }
+
+  .breadcrumbs__separator {
+    color: var(--color-ink-subtle);
+    flex: none;
+    margin-inline-end: var(--space-2);
+    user-select: none;
+  }
+
+  .breadcrumbs__current {
+    color: var(--color-ink);
+    font-weight: 700;
+  }
+</style>

@@ -1,4 +1,6 @@
 ---
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import ResponsiveImage from '../../../components/ResponsiveImage.astro';
 import SiteLayout from '../../../layouts/SiteLayout.astro';
 import StoreLinks from '../../../components/StoreLinks.astro';
 import { apps, mailtoForApp, type AppInfo } from '../../../data/apps';
@@ -21,62 +23,140 @@ const Support = ((await supportModules[supportPath]()) as { default: never }).de
 ---
 
 <SiteLayout title={`${app.name} 지원`} description={`${app.name} 지원, FAQ, 문의 안내`} image={app.icon}>
+  <header class="section support-header">
+    <Breadcrumbs
+      items={[
+        { label: '홈', href: '/' },
+        { label: '앱', href: '/#apps' },
+        { label: app.name, href: `/apps/${app.slug}` },
+        { label: '지원' },
+      ]}
+    />
+    <div class="support-header__identity">
+      <ResponsiveImage
+        class="support-app-icon"
+        src={app.icon}
+        alt={`${app.name} 앱 아이콘`}
+        width="1024"
+        height="1024"
+        widths={[192, 384]}
+        sizes="88px"
+      />
+      <div>
+        <h1>{app.name} 지원</h1>
+        <p class="lead">{app.summary}</p>
+      </div>
+    </div>
+  </header>
   <section class="section support-layout">
     <aside class="support-panel" aria-label={`${app.name} 지원 요약`}>
-      <img src={app.icon} alt={`${app.name} 앱 아이콘`} width="86" height="86" />
-      <h1>{app.name} 지원</h1>
-      <p>{app.summary}</p>
-      <a class="button primary" href={mailtoForApp(app)}>이메일 문의</a>
+      <a class="button primary" href={mailtoForApp(app)} aria-label={`${app.name} 이메일 문의`}>이메일 문의</a>
       <StoreLinks app={app} />
-      <a class="button secondary" href={`/apps/${app.slug}`}>앱 상세 보기</a>
-      <a class="button subtle" href={app.privacyUrl}>개인정보처리방침</a>
+      <a class="button secondary" href={`/apps/${app.slug}`} aria-label={`${app.name} 상세 페이지`}>앱 상세 보기</a>
+      <a class="button subtle" href={app.privacyUrl} aria-label={`${app.name} 개인정보처리방침`}>개인정보처리방침</a>
     </aside>
-    <article class="prose">
+    <article class="prose support-document">
       <Support />
     </article>
   </section>
 </SiteLayout>
 
 <style>
+  .support-header {
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  .support-header__identity {
+    align-items: center;
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: auto minmax(0, 1fr);
+    min-width: 0;
+  }
+
+  :global(.support-app-icon) {
+    border-radius: var(--radius-artifact);
+    box-shadow: var(--shadow-elevated);
+    height: var(--size-icon-lg);
+    overflow: hidden;
+    width: var(--size-icon-lg);
+  }
+
+  .support-header h1 {
+    font-size: var(--text-h1);
+    text-wrap: balance;
+  }
+
+  .support-header .lead {
+    margin: var(--space-3) 0 0;
+    text-wrap: pretty;
+  }
+
   .support-layout {
     align-items: start;
     display: grid;
-    gap: 44px;
-    grid-template-columns: 330px minmax(0, 1fr);
+    gap: var(--space-12);
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
   }
 
   .support-panel {
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    box-shadow: var(--shadow);
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-panel);
+    box-shadow: var(--shadow-elevated);
     display: grid;
-    gap: 14px;
-    padding: 24px;
+    gap: var(--space-3);
+    min-width: 0;
+    padding: var(--space-6);
     position: sticky;
-    top: 96px;
+    top: calc(var(--header-height) + var(--space-6));
   }
 
-  .support-panel img {
-    border-radius: 20px;
+  .support-panel :global(.store-links) {
+    align-items: stretch;
+    flex-direction: column;
   }
 
-  .support-panel h1 {
-    font-size: 2rem;
+  .support-document {
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-panel);
+    min-width: 0;
+    padding: clamp(var(--space-6), 4vw, var(--space-12));
   }
 
-  .support-panel p {
-    color: var(--muted);
-    margin: 0;
+  .support-document :global(a) {
+    overflow-wrap: anywhere;
+    word-break: keep-all;
   }
 
-  @media (max-width: 860px) {
+  .support-document :global(code),
+  .support-document :global(pre) {
+    overflow-wrap: anywhere;
+    word-break: keep-all;
+  }
+
+  .support-document :global(pre),
+  .support-document :global(table) {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  @media (max-width: 900px) {
     .support-layout {
       grid-template-columns: 1fr;
     }
 
     .support-panel {
       position: static;
+    }
+  }
+
+  @media (max-width: 680px) {
+    .support-header__identity {
+      align-items: start;
+      grid-template-columns: 1fr;
     }
   }
 </style>

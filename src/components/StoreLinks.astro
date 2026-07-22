@@ -9,26 +9,41 @@ const { app } = Astro.props;
 const available = isDownloadAvailable(app);
 ---
 
-<div class="button-row store-links" aria-label={`${app.name} 다운로드 링크`}>
+<div class="store-links" role="group" aria-label={`${app.name} 다운로드 링크`}>
   {
     available && app.appStoreUrl && (
-      <a class="button primary" href={app.appStoreUrl} target="_blank" rel="noreferrer">
-        App Store
+      <a
+        class="button primary"
+        href={app.appStoreUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`${app.name} App Store에서 다운로드 (새 탭)`}
+      >
+        <span lang="en">App Store</span>
       </a>
     )
   }
   {
     available && app.googlePlayUrl && (
-      <a class="button primary" href={app.googlePlayUrl} target="_blank" rel="noreferrer">
-        Google Play
+      <a
+        class="button primary"
+        href={app.googlePlayUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`${app.name} Google Play에서 다운로드 (새 탭)`}
+      >
+        <span lang="en">Google Play</span>
       </a>
     )
   }
-  {!available && <span class="status-pill">출시 준비 중</span>}
+  {!available && <span class="status-pill" data-status="comingSoon">출시 준비 중</span>}
 </div>
 
 <style>
   .store-links {
+    align-items: center;
+    display: flex;
     flex-wrap: wrap;
+    gap: var(--space-3);
   }
 </style>

@@ -1,7 +1,7 @@
 {
   "studio": {
     "name": "Sanbal Studio",
-    "tagline": "일상속의 불편함을 해결할 수 있는 프로덕트들을 만들고 있습니다.",
+    "tagline": "일상 속의 불편함을 해결할 수 있는 프로덕트들을 만들고 있습니다.",
     "description": "Sanbal Studio는 기록, 산책, 회복감처럼 개인의 생활 리듬에 가까운 문제를 조용하고 실용적인 앱으로 풀어가는 독립 앱 스튜디오입니다.",
     "email": "sanbal-studio@ksanbal.trade",
     "links": {
@@ -15,16 +15,16 @@
       "name": "Picmory",
       "status": "published",
       "tagline": "당신의 네컷사진을 담아 줄 사진 추억함",
-      "summary": "픽모리는 단순한 사진 저장 서비스가 아닌, 우리의 기억을 디테일하게 담아내는 추억의 보관함입니다. 네컷사진과 같은 소중한 추억을 손쉽게 저장하고, 언제 어디서든 불러올 수 있습니다.",
+      "summary": "픽모리는 단순한 사진 저장 서비스가 아닌, 우리의 기억을 디테일하게 담아내는 추억의 보관함입니다. 네컷사진과 같은 소중한 추억을 손쉽게 저장하고, 언제 어디서든 불러올 수 있습니다.",
       "icon": "/assets/apps/picmory/icon.png",
       "screenshots": [
         {
           "src": "/assets/apps/picmory/screenshot_1.png",
-          "alt": "Picmory 홈 화면 1"
+          "alt": "네컷사진 추억함을 보여주는 Picmory 소개 화면"
         },
         {
           "src": "/assets/apps/picmory/screenshot_2.png",
-          "alt": "Picmory 홈 화면 2"
+          "alt": "여러 네컷사진 앨범을 한곳에 모아 보는 Picmory 화면"
         },
         {
           "src": "/assets/apps/picmory/screenshot_3.png",
@@ -54,16 +54,16 @@
       "name": "Not Todo",
       "status": "published",
       "tagline": "하지 않기로 한 일을 지켜요",
-      "summary": "오늘은 더 해내지 않아도 괜찮아요. 하지 않기로 한 일을 지키는 것만으로도 하루는 조금 달라질 수 있어요.",
+      "summary": "오늘은 더 해내지 않아도 괜찮아요. 하지 않기로 한 일을 지키는 것만으로도 하루는 조금 달라질 수 있어요.",
       "icon": "/assets/apps/not-todo/icon.png",
       "screenshots": [
         {
           "src": "/assets/apps/not-todo/screenshot_1.png",
-          "alt": "Not Todo 홈 화면"
+          "alt": "하지 않을 일을 추가하는 Not Todo 소개 화면"
         },
         {
           "src": "/assets/apps/not-todo/screenshot_2.png",
-          "alt": "Not Todo 홈 화면 2"
+          "alt": "요일별 Not Todo 실천 기록을 보여주는 홈 화면"
         },
         {
           "src": "/assets/apps/not-todo/screenshot_3.png",
@@ -89,15 +89,21 @@
       "screenshots": [
         {
           "src": "/assets/apps/walk-bingo/board-preview.svg",
-          "alt": "산책빙고 보드 화면 예시"
+          "alt": "산책빙고 보드 화면 예시",
+          "width": 900,
+          "height": 1600
         },
         {
           "src": "/assets/apps/walk-bingo/share-preview.svg",
-          "alt": "산책빙고 공유 카드 예시"
+          "alt": "산책빙고 공유 카드 예시",
+          "width": 900,
+          "height": 1600
         },
         {
           "src": "/assets/apps/walk-bingo/camera-illustration.png",
-          "alt": "산책빙고 카메라 일러스트"
+          "alt": "산책빙고 카메라 일러스트",
+          "width": 1024,
+          "height": 1024
         }
       ],
       "appStoreUrl": "https://apps.apple.com/kr/app/산책빙고/id6774197634",

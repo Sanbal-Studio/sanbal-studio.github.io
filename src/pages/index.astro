@@ -1,59 +1,115 @@
 ---
 import AppCard from '../components/AppCard.astro';
+import ResponsiveImage from '../components/ResponsiveImage.astro';
 import SiteLayout from '../layouts/SiteLayout.astro';
 import { apps, studio } from '../data/apps';
+
+const primaryHeroApp = apps.find((app) => app.slug === 'not-todo') ?? apps[0];
+const secondaryHeroApp =
+  apps.find((app) => app.slug === 'walk-bingo') ??
+  apps.find((app) => app.slug !== primaryHeroApp.slug) ??
+  primaryHeroApp;
+const primaryHeroScreenshot = primaryHeroApp.screenshots[0];
+const secondaryHeroScreenshot = secondaryHeroApp.screenshots[0];
+const primaryHeroShot = primaryHeroScreenshot?.src ?? primaryHeroApp.icon;
+const secondaryHeroShot = secondaryHeroScreenshot?.src ?? secondaryHeroApp.icon;
 ---
 
-<SiteLayout title={studio.name} description={studio.description} image="/assets/apps/not-todo/home.png">
+<SiteLayout title={studio.name} description={studio.description} image={primaryHeroShot}>
   <section class="home-hero" aria-labelledby="hero-title">
     <div class="hero-media" aria-hidden="true">
-      <img class="hero-shot hero-shot--one" src="/assets/apps/not-todo/home.png" alt="" />
-      <img class="hero-shot hero-shot--two" src="/assets/apps/walk-bingo/board-preview.svg" alt="" />
-      <img class="hero-icon hero-icon--one" src="/assets/apps/not-todo/icon.png" alt="" />
-      <img class="hero-icon hero-icon--two" src="/assets/apps/walk-bingo/icon.png" alt="" />
+      <ResponsiveImage
+        class="hero-shot hero-shot--one"
+        src={primaryHeroShot}
+        alt=""
+        width={primaryHeroScreenshot?.width ?? 1320}
+        height={primaryHeroScreenshot?.height ?? 2868}
+        widths={[660, 990]}
+        sizes="(max-width: 860px) 46vw, 400px"
+        fetchpriority="high"
+      />
+      <ResponsiveImage
+        class="hero-shot hero-shot--two"
+        src={secondaryHeroShot}
+        alt=""
+        width={secondaryHeroScreenshot?.width ?? 1320}
+        height={secondaryHeroScreenshot?.height ?? 2868}
+        widths={[660, 990]}
+        sizes="(max-width: 860px) 46vw, 400px"
+        loading="lazy"
+      />
+      <ResponsiveImage
+        class="hero-icon hero-icon--one"
+        src={primaryHeroApp.icon}
+        alt=""
+        width="1024"
+        height="1024"
+        widths={[192, 384]}
+        sizes="112px"
+        loading="lazy"
+      />
+      <ResponsiveImage
+        class="hero-icon hero-icon--two"
+        src={secondaryHeroApp.icon}
+        alt=""
+        width="1024"
+        height="1024"
+        widths={[192, 384]}
+        sizes="112px"
+        loading="lazy"
+      />
     </div>
     <div class="hero-shade" aria-hidden="true"></div>
     <div class="hero-content">
-      <p class="eyebrow">Independent app studio</p>
-      <h1 id="hero-title">Sanbal Studio</h1>
-      <p>{studio.description}</p>
-      <div class="button-row">
-        <a class="button primary" href="#apps">앱 보기</a>
-        <a class="button secondary" href={`mailto:${studio.email}`}>이메일 문의</a>
-        <a class="button secondary" href={studio.links.threads} target="_blank" rel="noreferrer">Threads</a>
-        <a class="button secondary" href={studio.links.x} target="_blank" rel="noreferrer">X</a>
+      <div class="hero-copy">
+        <p class="eyebrow" lang="en">Independent app studio</p>
+        <h1 id="hero-title">Sanbal Studio</h1>
+        <p>{studio.description}</p>
+        <ul class="hero-themes" aria-label="Sanbal Studio가 다루는 생활 주제">
+          <li>기록</li>
+          <li>산책</li>
+          <li>추억</li>
+        </ul>
+        <div class="button-row">
+          <a class="button primary" href="#apps">앱 둘러보기</a>
+          <a class="button secondary" href="/contact">문의하기</a>
+        </div>
       </div>
     </div>
   </section>
 
   <section id="apps" class="section" aria-labelledby="apps-title">
     <div class="section-intro">
-      <p class="eyebrow">Apps</p>
-      <h2 id="apps-title">하나의 허브에서 관리하는 앱 컬렉션</h2>
+      <p class="eyebrow" lang="en">Apps</p>
+      <h2 id="apps-title">작은 생활 리듬을 위한 세 가지 앱</h2>
       <p class="lead">
-        앱별 상세 소개, 지원 URL, 개인정보처리방침 URL을 같은 구조로 제공합니다.
-        새 앱은 메타데이터와 MDX 콘텐츠를 추가해 확장할 수 있습니다.
+        사진을 모으고, 하지 않을 일을 지키고, 익숙한 동네를 새롭게 걷는 방법을 만듭니다.
+        앱의 상세 화면과 지원 정보도 이곳에서 바로 확인할 수 있습니다.
       </p>
     </div>
     <div class="app-grid">
-      {apps.map((app) => <AppCard app={app} />)}
+      {apps.map((app, index) => <AppCard app={app} wide={index === apps.length - 1 && apps.length % 2 === 1} />)}
     </div>
   </section>
 
   <section class="section studio-links" aria-labelledby="support-title">
     <div>
-      <p class="eyebrow">Support</p>
-      <h2 id="support-title">앱 문의는 앱별 지원 페이지에서 시작합니다</h2>
+      <p class="eyebrow" lang="en">Support</p>
+      <h2 id="support-title">필요한 답을 가장 가까운 곳에서</h2>
+      <p class="studio-links__copy">앱별 자주 묻는 질문과 개인정보 처리 기준을 한 곳에서 확인하세요.</p>
     </div>
-    <a class="button primary" href="/contact">전체 문의 허브</a>
+    <a class="button secondary" href="/contact">전체 문의 보기</a>
   </section>
 </SiteLayout>
 
 <style>
   .home-hero {
-    background: #101714;
-    color: #fff;
-    min-height: 72svh;
+    background:
+      radial-gradient(circle at 76% 20%, color-mix(in srgb, var(--color-brand) 26%, transparent), transparent 36rem),
+      radial-gradient(circle at 98% 78%, color-mix(in srgb, var(--color-info) 15%, transparent), transparent 28rem),
+      var(--color-hero);
+    color: var(--color-on-dark);
+    min-height: min(52rem, calc(100dvh - var(--header-height)));
     overflow: hidden;
     position: relative;
   }
@@ -65,128 +121,304 @@ import { apps, studio } from '../data/apps';
   }
 
   .hero-shade {
-    background: rgba(16, 23, 20, 0.62);
+    background:
+      linear-gradient(90deg, var(--color-hero-scrim) 0%, color-mix(in srgb, var(--color-hero) 34%, transparent) 55%, transparent 86%),
+      linear-gradient(0deg, color-mix(in srgb, var(--color-hero) 44%, transparent), transparent 42%);
   }
 
-  .hero-shot,
-  .hero-icon {
+  :global(.hero-shot),
+  :global(.hero-icon) {
     position: absolute;
   }
 
-  .hero-shot {
-    border-radius: 28px;
-    box-shadow: 0 28px 90px rgba(0, 0, 0, 0.42);
-    height: min(70vh, 760px);
+  :global(.hero-shot) {
+    border: 1px solid var(--color-on-dark-line);
+    border-radius: var(--radius-artifact);
+    box-shadow: var(--shadow-artifact);
+    filter: saturate(0.88) brightness(0.88);
+    overflow: hidden;
+    width: clamp(17rem, 28vw, 25rem);
+  }
+
+  :global(.hero-shot > img),
+  :global(.hero-icon > img) {
+    height: 100%;
     object-fit: cover;
-    width: auto;
+    width: 100%;
   }
 
-  .hero-shot--one {
-    right: 18vw;
-    top: 7vh;
-    transform: rotate(-7deg);
+  :global(.hero-shot--one) {
+    right: 17vw;
+    top: 7%;
+    transform: rotate(-5deg);
   }
 
-  .hero-shot--two {
-    right: -40px;
-    top: 15vh;
-    transform: rotate(8deg);
+  :global(.hero-shot--two) {
+    right: -2%;
+    top: 16%;
+    transform: rotate(7deg);
   }
 
-  .hero-icon {
-    border-radius: 26px;
-    box-shadow: 0 20px 70px rgba(0, 0, 0, 0.34);
-    height: 116px;
-    width: 116px;
+  :global(.hero-icon) {
+    border: 1px solid var(--color-on-dark-line);
+    border-radius: var(--radius-panel);
+    box-shadow: var(--shadow-artifact);
+    height: clamp(4.5rem, 8vw, 7rem);
+    overflow: hidden;
+    width: clamp(4.5rem, 8vw, 7rem);
   }
 
-  .hero-icon--one {
-    right: 44vw;
-    top: 12vh;
+  :global(.hero-icon--one) {
+    right: 43vw;
+    top: 13%;
   }
 
-  .hero-icon--two {
-    bottom: 12vh;
-    right: 9vw;
+  :global(.hero-icon--two) {
+    bottom: 10%;
+    right: 8%;
   }
 
   .hero-content {
-    max-width: 760px;
-    padding: 14vh 32px 11vh;
+    align-items: center;
+    display: flex;
+    margin: 0 auto;
+    max-width: var(--layout-max);
+    min-height: inherit;
+    padding: var(--space-20) var(--space-8) var(--space-24);
     position: relative;
-    width: min(100%, 1180px);
     z-index: 1;
   }
 
+  .hero-copy {
+    animation: hero-enter var(--motion-emphasis) both;
+    max-width: 44rem;
+  }
+
+  .hero-content h1 {
+    color: var(--color-on-dark);
+    font-size: var(--text-display);
+    letter-spacing: -0.045em;
+    line-height: 0.94;
+  }
+
   .hero-content p:not(.eyebrow) {
-    color: rgba(255, 255, 255, 0.82);
-    font-size: clamp(1.1rem, 2vw, 1.38rem);
-    margin: 24px 0 32px;
-    max-width: 680px;
+    color: var(--color-on-dark-muted);
+    font-size: var(--text-body-lg);
+    margin: var(--space-6) 0 var(--space-5);
+    max-width: 38rem;
   }
 
   .home-hero .eyebrow {
-    color: #9cd1ae;
+    color: color-mix(in srgb, var(--color-brand-soft) 82%, var(--color-on-dark));
   }
 
   .home-hero .button.secondary {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.28);
-    color: #fff;
+    background: var(--color-on-dark-surface);
+    border-color: var(--color-on-dark-line);
+    color: var(--color-on-dark);
+  }
+
+  .home-hero .button.secondary:hover {
+    background: color-mix(in srgb, var(--color-on-dark-surface) 72%, var(--color-on-dark));
+    color: var(--color-hero);
+  }
+
+  .hero-themes {
+    display: flex;
+    gap: var(--space-3);
+    list-style: none;
+    margin: 0 0 var(--space-8);
+    padding: 0;
+  }
+
+  .hero-themes li {
+    align-items: center;
+    color: var(--color-on-dark-muted);
+    display: flex;
+    font-size: var(--text-body-sm);
+    font-weight: 700;
+    gap: var(--space-3);
+  }
+
+  .hero-themes li + li::before {
+    background: var(--color-on-dark-line);
+    border-radius: var(--radius-round);
+    content: "";
+    height: var(--space-1);
+    width: var(--space-1);
+  }
+
+  @keyframes hero-enter {
+    from {
+      opacity: 0;
+      transform: translateY(var(--space-4));
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .section-intro {
-    margin-bottom: 28px;
+    display: grid;
+    gap: var(--space-4) var(--space-12);
+    grid-template-columns: minmax(0, 1.1fr) minmax(18rem, 0.9fr);
+    margin-bottom: var(--space-10);
+  }
+
+  .section-intro .eyebrow {
+    grid-column: 1 / -1;
+    margin-bottom: 0;
+  }
+
+  .section-intro .lead {
+    align-self: end;
+    margin: 0;
   }
 
   .app-grid {
     display: grid;
-    gap: 20px;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-8);
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  .app-grid :global(.app-card) {
+    grid-column: span 6;
+  }
+
+  .app-grid :global(.app-card--wide) {
+    grid-column: 1 / -1;
   }
 
   .studio-links {
     align-items: center;
+    background:
+      radial-gradient(circle at 82% 12%, color-mix(in srgb, var(--color-brand) 38%, transparent), transparent 20rem),
+      var(--color-hero);
+    border: 1px solid color-mix(in srgb, var(--color-brand) 32%, var(--color-hero));
+    border-radius: var(--radius-panel);
+    color: var(--color-on-dark);
     display: flex;
+    gap: var(--space-8);
     justify-content: space-between;
-    gap: 24px;
+    margin-top: var(--space-24);
+    padding: var(--space-12);
+  }
+
+  .studio-links h2 {
+    color: var(--color-on-dark);
+    max-width: 44rem;
+  }
+
+  .studio-links .eyebrow {
+    color: color-mix(in srgb, var(--color-brand-soft) 82%, var(--color-on-dark));
+  }
+
+  .studio-links__copy {
+    color: var(--color-on-dark-muted);
+    margin: var(--space-4) 0 0;
+    max-width: 40rem;
+  }
+
+  .studio-links .button.secondary {
+    flex: 0 0 auto;
   }
 
   @media (max-width: 860px) {
     .home-hero {
-      min-height: 78svh;
+      min-height: 44rem;
     }
 
-    .hero-shot {
-      height: 50vh;
-      opacity: 0.56;
+    :global(.hero-shot) {
+      opacity: 0.46;
+      width: clamp(15rem, 46vw, 21rem);
     }
 
-    .hero-shot--one {
-      left: 45%;
+    :global(.hero-shot--one) {
+      left: 51%;
       right: auto;
     }
 
-    .hero-shot--two {
-      right: -45%;
+    :global(.hero-shot--two) {
+      right: -24%;
     }
 
-    .hero-icon {
+    :global(.hero-icon) {
       display: none;
     }
 
     .hero-content {
-      padding: 12vh 20px 10vh;
+      padding: var(--space-20) var(--space-5) var(--space-24);
     }
 
-    .app-grid,
-    .studio-links {
+    .section-intro {
       grid-template-columns: 1fr;
+    }
+
+    .app-grid :global(.app-card),
+    .app-grid :global(.app-card--wide) {
+      grid-column: 1 / -1;
+    }
+
+    .studio-links {
+      margin-left: var(--space-5);
+      margin-right: var(--space-5);
+      padding: var(--space-10) var(--space-6);
     }
 
     .studio-links {
       align-items: flex-start;
       flex-direction: column;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .home-hero {
+      min-height: auto;
+    }
+
+    .hero-content {
+      padding-bottom: var(--space-20);
+      padding-top: var(--space-16);
+    }
+
+    .hero-copy {
+      max-width: 100%;
+    }
+
+    .hero-content h1 {
+      font-size: clamp(3.25rem, 17vw, 4.75rem);
+    }
+
+    :global(.hero-shot--one) {
+      left: 72%;
+      top: 8%;
+    }
+
+    :global(.hero-shot--two) {
+      display: none;
+    }
+
+    .home-hero .button-row {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .home-hero .button {
+      width: 100%;
+    }
+
+    .app-grid {
+      gap: var(--space-6);
+    }
+
+    .studio-links {
+      margin-top: var(--space-20);
+    }
+
+    .studio-links .button {
+      width: 100%;
     }
   }
 </style>
