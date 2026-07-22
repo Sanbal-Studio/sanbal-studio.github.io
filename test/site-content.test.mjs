@@ -67,10 +67,13 @@ describe('Sanbal Studio site content contract', () => {
     }
   });
 
-  it('publishes the Walk Bingo App Store link', () => {
+  it('publishes the App Store links', () => {
     const content = loadContent();
+    const picmory = content.apps.find((app) => app.slug === 'picmory');
     const walkBingo = content.apps.find((app) => app.slug === 'walk-bingo');
 
+    assert.ok(picmory);
+    assert.equal(picmory.appStoreUrl, 'https://apps.apple.com/kr/app/picmory/id6476240673');
     assert.ok(walkBingo);
     assert.equal(walkBingo.status, 'published');
     assert.equal(walkBingo.appStoreUrl, 'https://apps.apple.com/kr/app/산책빙고/id6774197634');
