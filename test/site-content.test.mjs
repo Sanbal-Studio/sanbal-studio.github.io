@@ -17,7 +17,7 @@ describe('Sanbal Studio site content contract', () => {
     const content = loadContent();
     const slugs = content.apps.map((app) => app.slug).sort();
 
-    assert.deepEqual(slugs, ['not-todo', 'picmory', 'walk-bingo']);
+    assert.deepEqual(slugs, ['frep', 'not-todo', 'picmory', 'walk-bingo']);
   });
 
   it('provides studio contact links for the home and contact pages', () => {
@@ -37,7 +37,7 @@ describe('Sanbal Studio site content contract', () => {
       assert.match(app.status, /^(published|comingSoon)$/);
       assert.ok(app.tagline);
       assert.ok(app.summary);
-      assert.equal(app.supportUrl, `/apps/${app.slug}/support`);
+      assert.ok(app.supportUrl);
       assert.equal(app.privacyUrl, `/apps/${app.slug}/privacy`);
       assert.ok(exists(app.icon.replace(/^\//, 'public/')), `${app.slug} icon exists`);
 

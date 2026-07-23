@@ -110,6 +110,26 @@
       "googlePlayUrl": "",
       "supportUrl": "/apps/walk-bingo/support",
       "privacyUrl": "/apps/walk-bingo/privacy"
+    },
+    {
+      "slug": "frep",
+      "name": "Frep",
+      "status": "comingSoon",
+      "tagline": "페스티벌 예습을 한곳에서 준비해요",
+      "summary": "라인업 포스터나 타임테이블 이미지에서 페스티벌 정보를 정리하고, 공연 전에 들을 예습 플레이리스트를 준비하는 앱입니다.",
+      "icon": "/assets/apps/frep/icon.png",
+      "screenshots": [
+        {
+          "src": "/assets/apps/frep/screenshot_1.png",
+          "alt": "Frep에 저장한 페스티벌 목록과 새 페스티벌 추가 화면",
+          "width": 1284,
+          "height": 2778
+        }
+      ],
+      "appStoreUrl": "",
+      "googlePlayUrl": "",
+      "supportUrl": "https://devksanbal.notion.site/3981406092e9805b84a6e68df8a05cb5?pvs=105",
+      "privacyUrl": "/apps/frep/privacy"
     }
   ]
 }

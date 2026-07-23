@@ -38,6 +38,7 @@ Sanbal Studio는 생활 가까이의 작은 문제를 차분하게 다루는 독
 | Picmory tint | `--color-product-picmory` | `#f1ecdf` | Picmory 미디어 캔버스 |
 | Not Todo tint | `--color-product-not-todo` | `#edf0e8` | Not Todo 미디어 캔버스 |
 | Walk Bingo tint | `--color-product-walk-bingo` | `#e2ece3` | 산책빙고 미디어 캔버스 |
+| Frep tint | `--color-product-frep` | `#e5edf1` | Frep 미디어 캔버스 |
 
 ### Rules
 
