@@ -74,6 +74,7 @@ describe('Sanbal Studio site content contract', () => {
 
     assert.ok(picmory);
     assert.equal(picmory.appStoreUrl, 'https://apps.apple.com/kr/app/picmory/id6476240673');
+    assert.equal(picmory.googlePlayUrl, 'https://play.google.com/store/apps/details?id=com.sanbalstudio.picmory');
     assert.ok(walkBingo);
     assert.equal(walkBingo.status, 'published');
     assert.equal(walkBingo.appStoreUrl, 'https://apps.apple.com/kr/app/산책빙고/id6774197634');
