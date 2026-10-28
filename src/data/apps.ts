@@ -35,6 +35,7 @@ export interface AppInfo {
   supportEmail?: string;
   supportUrl: string;
   privacyUrl: string;
+  termsUrl?: string;
 }
 
 interface SiteContent {
