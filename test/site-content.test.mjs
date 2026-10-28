@@ -106,7 +106,11 @@ describe('Sanbal Studio site content contract', () => {
       assert.ok(document.includes('[N]'));
       assert.ok(document.includes('[시행일 확인 필요]'));
     }
-    assert.ok(privacy.includes('② Cloudflare, Inc.(미국 등(Cloudflare 한국 부속서 참조)) |'));
+    assert.ok(privacy.includes('② Cloudflare, Inc.(미국 등, Cloudflare 한국 부속서 참조) |'));
+    assert.ok(privacy.includes('사진은 주로 아시아·태평양 지역 데이터센터에 저장되며, 전송 과정에서 Cloudflare의 전 세계 네트워크에 일시적으로 캐시될 수 있습니다.'));
+    assert.ok(!privacy.includes('미국 등(Cloudflare'));
+    assert.ok(!privacy.includes('국내 저장'));
+    assert.ok(!privacy.includes('APAC에만 저장'));
     assert.ok(privacy.includes('연락처: Cloudflare, Inc. 개인정보 보호책임자(Data Protection Officer), dpo@cloudflare.com, 101 Townsend St., San Francisco, CA 94107, USA'));
     assert.ok(!privacy.includes('[확인 필요]'));
     assert.ok(!/Singapore|싱가포르/.test(privacy));
