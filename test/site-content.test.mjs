@@ -61,10 +61,52 @@ describe('Sanbal Studio site content contract', () => {
       'src/pages/apps/[slug].astro',
       'src/pages/apps/[slug]/support.astro',
       'src/pages/apps/[slug]/privacy.astro',
+      'src/pages/apps/[slug]/terms.astro',
       'src/pages/contact.astro',
     ]) {
       assert.ok(exists(page), `${page} exists`);
     }
+  });
+
+  it('requires a terms document for every configured terms URL', () => {
+    const content = loadContent();
+
+    for (const app of content.apps) {
+      if (app.termsUrl !== undefined) {
+        assert.equal(app.termsUrl, `/apps/${app.slug}/terms`);
+        assert.ok(
+          exists(join('src/content/apps', app.slug, 'terms.mdx')),
+          `${app.slug} terms.mdx exists`,
+        );
+      }
+    }
+
+    const picmory = content.apps.find((app) => app.slug === 'picmory');
+
+    assert.ok(picmory);
+    assert.equal(picmory.termsUrl, '/apps/picmory/terms');
+  });
+
+  it('keeps the approved Picmory legal clauses and publication placeholders', () => {
+    const terms = readFileSync(new URL('src/content/apps/picmory/terms.mdx', root), 'utf8');
+    const privacy = readFileSync(new URL('src/content/apps/picmory/privacy.mdx', root), 'utf8');
+
+    assert.ok(terms.includes('회원은 언제든지 앱에서 탈퇴할 수 있으며, 회사는 탈퇴 즉시'));
+    assert.ok(privacy.includes('회원 정보 데이터베이스는 대한민국 내 회사 관리 서버에 저장됩니다.'));
+    assert.ok(privacy.includes('사진 저장·전송 및 서비스 접속 중계'));
+    assert.ok(terms.includes('### 제16조 (가입 자격)'));
+    assert.ok(terms.includes('### 제17조 (회원 탈퇴)'));
+    assert.ok(terms.includes('10. 이용자간 혹은 이용자와 제3자 상호간의 온라인 및 오프라인상에서'));
+    assert.ok(terms.includes('\n11. 픽모리의 서비스에 배너광고'));
+    assert.ok(terms.includes('\n14. 이용자가 작성한 정보가'));
+    assert.doesNotMatch(terms, /^\d+\. (?:11|12|13|14)\. /m);
+
+    // 게시 전에 원문의 미확정 표기를 실제 값으로 교체해야 합니다.
+    for (const document of [terms, privacy]) {
+      assert.ok(document.includes('[N]'));
+      assert.ok(document.includes('[시행일 확인 필요]'));
+    }
+    assert.ok(privacy.includes('[확인 필요]'));
   });
 
   it('publishes the App Store links', () => {
