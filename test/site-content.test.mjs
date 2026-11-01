@@ -87,7 +87,7 @@ describe('Sanbal Studio site content contract', () => {
     assert.equal(picmory.termsUrl, '/apps/picmory/terms');
   });
 
-  it('keeps the approved Picmory legal clauses and publication placeholders', () => {
+  it('keeps the finalized Picmory legal clauses and effective date', () => {
     const terms = readFileSync(new URL('src/content/apps/picmory/terms.mdx', root), 'utf8');
     const privacy = readFileSync(new URL('src/content/apps/picmory/privacy.mdx', root), 'utf8');
 
@@ -101,10 +101,14 @@ describe('Sanbal Studio site content contract', () => {
     assert.ok(terms.includes('\n14. 이용자가 작성한 정보가'));
     assert.doesNotMatch(terms, /^\d+\. (?:11|12|13|14)\. /m);
 
-    // 게시 전에 원문의 미확정 표기를 실제 값으로 교체해야 합니다.
+    // 확정된 시행일과 배포 횟수 기준을 두 문서에 일관되게 유지합니다.
     for (const document of [terms, privacy]) {
-      assert.ok(document.includes('[N]'));
-      assert.ok(document.includes('[시행일 확인 필요]'));
+      assert.ok(document.includes('최근 14회 배포분의 백업만 보관하고, 새 백업이 생기면 가장 오래된 백업부터 자동 삭제'));
+      assert.ok(document.includes('2026-11-01'));
+      assert.doesNotMatch(document, /\[(?:N|전화번호|[^\]]*확인 필요)\]/);
+      assert.ok(!document.includes('2024년 6월 11일'));
+      assert.ok(!document.includes('백업 보관 주기'));
+      assert.ok(!document.includes('14일'));
     }
     assert.ok(privacy.includes('② Cloudflare, Inc.(미국 등, Cloudflare 한국 부속서 참조) |'));
     assert.ok(privacy.includes('사진은 주로 아시아·태평양 지역 데이터센터에 저장되며, 전송 과정에서 Cloudflare의 전 세계 네트워크에 일시적으로 캐시될 수 있습니다.'));
@@ -114,16 +118,24 @@ describe('Sanbal Studio site content contract', () => {
     assert.ok(privacy.includes('연락처: Cloudflare, Inc. 개인정보 보호책임자(Data Protection Officer), dpo@cloudflare.com, 101 Townsend St., San Francisco, CA 94107, USA'));
     assert.ok(!privacy.includes('[확인 필요]'));
     assert.ok(!/Singapore|싱가포르/.test(privacy));
-    // [전화번호]는 게시 전에 실제 값으로 치환해야 하는 표지입니다.
-    assert.ok(privacy.includes('전화: [전화번호]'));
+    // 개인정보 보호책임자 연락처는 확정된 이메일만 공개합니다.
+    assert.ok(privacy.includes('성명: 김현균 / 이메일: dev.ksanbal@gmail.com'));
+    assert.ok(!privacy.includes('전화:'));
     assert.doesNotMatch(privacy, /0\d{1,2}-?\d{3,4}-?\d{4}/);
-    // 3년 보관 기간은 현균님 최종 확인과 민법 제766조 대조 전까지 게시 금지 조건입니다.
+    // 사용자가 확정한 3년 보관 기간을 유지합니다. 법률 검토와 구현 검증은 별도입니다.
     for (const clause of [
       '다만 동의 및 탈퇴 사실에 관한 분쟁에 대응하고 부정 이용을 방지하기 위해, 아래 최소 기록은 원래 식별자를 알 수 없도록 변환한 상태로 탈퇴일로부터 3년간 보관한 후 파기합니다.\n\n- 보관 항목: 변환된 회원 식별자, 탈퇴 일시, 동의 항목과 동의·거부·철회 일시 및 문구 버전\n- 보관 목적: 동의 여부에 관한 분쟁 대응, 부정 이용 방지\n- 보관 기간: 탈퇴일로부터 3년(민법 제766조의 손해배상청구권 소멸시효 기간 참고)\n\n이 기록은 위 목적 외의 용도로 이용하지 않습니다.',
     ]) {
       assert.ok(privacy.includes(clause));
     }
     assert.ok(!privacy.includes('해당 기록은 회원 탈퇴 시 함께 파기합니다.'));
+  });
+
+  it('links Picmory details to the site legal pages', () => {
+    const detail = readFileSync(new URL('src/content/apps/picmory/detail.mdx', root), 'utf8');
+    assert.ok(detail.includes('[이용약관 보기](https://sanbal-studio.github.io/apps/picmory/terms)'));
+    assert.ok(detail.includes('[개인정보처리방침 보기](https://sanbal-studio.github.io/apps/picmory/privacy)'));
+    assert.doesNotMatch(detail, /notion\.(?:site|so)/);
   });
 
   it('keeps the revised Picmory privacy disclosures', () => {
@@ -142,7 +154,7 @@ describe('Sanbal Studio site content contract', () => {
       "③ 국외 이전 거부 방법 및 불이익: 이용 분석과 맞춤형 광고는 앱 설정 또는 iOS '추적 허용' 해제로 거부할 수 있으며 서비스 이용에 불이익이 없습니다. 푸시 알림, 오류 분석, 사진 저장은 서비스 제공에 필요하여 거부하려면 회원 탈퇴가 필요합니다.",
       "앱은 Google AdMob을 통해 광고를 제공하며, 맞춤형 광고는 회원이 동의한 경우에만 제공합니다. iOS는 '추적 허용'을 선택한 경우, Android는 앱의 동의 화면에서 동의한 경우에만 광고 식별자와 앱 이용 기록이 맞춤형 광고에 사용됩니다. 동의하지 않아도 서비스는 똑같이 이용할 수 있으며 맞춤형이 아닌 광고가 표시됩니다. 동의는 앱 설정 또는 기기의 광고·추적 설정에서 언제든지 철회할 수 있습니다.",
       '14. 개인정보 보호책임자',
-      '## 제14조 (개인정보 보호책임자)\n\n성명: 김현균 / 이메일: picmory.contact@gmail.com / 전화: [전화번호]\n\n이 개인정보 처리방침은 시행일로부터 적용됩니다.',
+      '## 제14조 (개인정보 보호책임자)\n\n성명: 김현균 / 이메일: dev.ksanbal@gmail.com\n\n이 개인정보 처리방침은 시행일로부터 적용됩니다.',
     ]) {
       assert.ok(privacy.includes(clause), `privacy includes ${clause}`);
     }
@@ -168,7 +180,7 @@ describe('Sanbal Studio site content contract', () => {
       '위 1항 각 호 해당 사항에',
       '4. 이용계약이 해지되거나 회원이 탈퇴하는 경우 회사는 제17조 및 개인정보처리방침에 따라 회원의 개인정보와 업로드한 사진을 파기합니다.',
       '5. 제16조 ③에 따라 만 14세 미만으로 확인된 경우에도 계약이 종료됩니다.',
-      '### 제17조 (회원 탈퇴)\n\n① 회원은 언제든지 앱에서 탈퇴할 수 있습니다.\n\n② 회사는 탈퇴 즉시 회원의 개인정보와 업로드한 사진을 파기합니다. 다만 관계 법령에 따라 보존해야 하는 경우, 또는 관계 법령 위반에 따른 수사·조사가 진행 중인 경우에는 그 기간 동안 보관 후 파기합니다. 또한 동의 이력과 탈퇴 기록은 개인정보처리방침 제8조에 따라 최소한으로 보관합니다.\n\n③ 백업본은 백업 보관 주기([N]일) 내에 파기하며, 그동안 서비스 운영에 사용하지 않습니다.',
+      '### 제17조 (회원 탈퇴)\n\n① 회원은 언제든지 앱에서 탈퇴할 수 있습니다.\n\n② 회사는 탈퇴 즉시 회원의 개인정보와 업로드한 사진을 파기합니다. 다만 관계 법령에 따라 보존해야 하는 경우, 또는 관계 법령 위반에 따른 수사·조사가 진행 중인 경우에는 그 기간 동안 보관 후 파기합니다. 또한 동의 이력과 탈퇴 기록은 개인정보처리방침 제8조에 따라 최소한으로 보관합니다.\n\n③ 백업본은 최근 14회 배포분의 백업만 보관하고, 새 백업이 생기면 가장 오래된 백업부터 자동 삭제합니다. 백업본은 보관 중 서비스 운영에 사용하지 않습니다.',
       "### 제18조 (광고)\n\n① 서비스에는 Google AdMob을 통한 광고가 표시될 수 있습니다.\n\n② 맞춤형 광고는 회원이 iOS의 '추적 허용' 또는 앱의 동의 화면에서 동의한 경우에만 제공하며, 동의하지 않아도 서비스를 똑같이 이용할 수 있습니다. 이 경우 맞춤형이 아닌 광고가 표시됩니다.\n\n③ 자세한 내용은 개인정보처리방침 제12조에 따릅니다.",
     ]) {
       assert.ok(terms.includes(clause), `terms includes ${clause}`);
