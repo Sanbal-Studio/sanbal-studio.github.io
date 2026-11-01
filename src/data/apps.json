@@ -47,7 +47,8 @@
       "googlePlayUrl": "https://play.google.com/store/apps/details?id=com.sanbalstudio.picmory",
       "supportEmail": "picmory.contact@gmail.com",
       "supportUrl": "/apps/picmory/support",
-      "privacyUrl": "/apps/picmory/privacy"
+      "privacyUrl": "/apps/picmory/privacy",
+      "termsUrl": "/apps/picmory/terms"
     },
     {
       "slug": "not-todo",

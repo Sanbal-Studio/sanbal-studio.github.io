@@ -51,6 +51,9 @@ const Detail = ((await detailModules[detailPath]()) as { default: never }).defau
       <div class="button-row">
         <a class="button secondary" href={app.supportUrl} aria-label={`${app.name} 지원 페이지`}>지원 페이지</a>
         <a class="button secondary" href={app.privacyUrl} aria-label={`${app.name} 개인정보처리방침`}>개인정보처리방침</a>
+        {app.termsUrl && (
+          <a class="button secondary" href={app.termsUrl} aria-label={`${app.name} 이용약관`}>이용약관</a>
+        )}
       </div>
     </div>
     <div
