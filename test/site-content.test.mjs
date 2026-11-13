@@ -17,7 +17,7 @@ describe('Sanbal Studio site content contract', () => {
     const content = loadContent();
     const slugs = content.apps.map((app) => app.slug).sort();
 
-    assert.deepEqual(slugs, ['frep', 'not-todo', 'picmory', 'walk-bingo']);
+    assert.deepEqual(slugs, ['frep', 'not-todo', 'picmory', 'seureuk', 'walk-bingo']);
   });
 
   it('provides studio contact links for the home and contact pages', () => {
@@ -26,6 +26,26 @@ describe('Sanbal Studio site content contract', () => {
     assert.equal(content.studio.email, 'sanbal-studio@ksanbal.trade');
     assert.match(content.studio.links.threads, /^https:\/\/www\.threads\.com\//);
     assert.match(content.studio.links.x, /^https:\/\/x\.com\//);
+  });
+
+  it('publishes Seureuk privacy controls without unresolved publication values', () => {
+    const content = loadContent();
+    const seureuk = content.apps.find((app) => app.slug === 'seureuk');
+    const privacy = readFileSync(new URL('src/content/apps/seureuk/privacy.mdx', root), 'utf8');
+
+    assert.ok(seureuk);
+    assert.equal(seureuk.status, 'comingSoon');
+    assert.equal(seureuk.supportEmail, 'dev.ksanbal@gmail.com');
+    assert.equal(seureuk.appStoreUrl, '');
+    assert.equal(seureuk.googlePlayUrl, '');
+    assert.ok(privacy.includes('김현균'));
+    assert.ok(privacy.includes('필수: 이메일 주소, 문의 내용'));
+    assert.ok(privacy.includes('이를 끄면 그때부터 이용 통계를 보내지 않으며, 끈 상태는 앱을 다시 켜도 유지됩니다. 끄는 즉시 단축어로 저장해 두었던 이용 기록을 지웁니다.'));
+    assert.ok(privacy.includes('IDFV'));
+    assert.ok(!privacy.includes('앱 인스턴스 ID를 새로 만듭니다.'));
+    assert.ok(!privacy.includes('<!--'));
+    const unresolved = privacy.match(/\[(?:N개월\/N년|사업자명|전화번호|YYYY-MM-DD)\]/g) ?? [];
+    assert.deepEqual(unresolved, [], 'Seureuk publication values must be confirmed');
   });
 
   it('defines complete metadata and content files for every app', () => {
