@@ -11,6 +11,27 @@
   },
   "apps": [
     {
+      "slug": "seureuk",
+      "name": "스륵",
+      "status": "comingSoon",
+      "tagline": "지출과 수입을 가볍게 기록해요",
+      "summary": "스륵은 iPhone에서 지출과 수입을 기록하고 월 예산을 확인하는 가계부 앱이에요. 회원가입 없이 사용하고, iCloud 동기화는 필요할 때 켤 수 있어요.",
+      "icon": "/assets/apps/seureuk/icon.png",
+      "screenshots": [
+        {
+          "src": "/assets/apps/seureuk/settings.png",
+          "alt": "iCloud와 사용 통계 보내기 스위치를 보여주는 스륵 설정 화면 디자인",
+          "width": 402,
+          "height": 874
+        }
+      ],
+      "appStoreUrl": "",
+      "googlePlayUrl": "",
+      "supportEmail": "dev.ksanbal@gmail.com",
+      "supportUrl": "/apps/seureuk/support",
+      "privacyUrl": "/apps/seureuk/privacy"
+    },
+    {
       "slug": "picmory",
       "name": "Picmory",
       "status": "published",
