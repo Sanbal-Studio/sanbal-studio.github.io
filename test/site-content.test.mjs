@@ -39,8 +39,14 @@ describe('Sanbal Studio site content contract', () => {
     assert.equal(seureuk.appStoreUrl, '');
     assert.equal(seureuk.googlePlayUrl, '');
     assert.ok(privacy.includes('김현균'));
-    assert.ok(privacy.includes('필수: 이메일 주소, 문의 내용'));
-    assert.ok(privacy.includes('이를 끄면 그때부터 이용 통계를 보내지 않으며, 끈 상태는 앱을 다시 켜도 유지됩니다. 끄는 즉시 단축어로 저장해 두었던 이용 기록을 지웁니다.'));
+    assert.match(privacy, /Notion 문의 양식.*필수: 문의 구분, 의견·문의 내용.*선택: 회신 이메일 주소.*스크린샷/);
+    assert.match(privacy, /애널리틱스 이벤트 데이터.*2개월/);
+    assert.match(privacy, /애널리틱스 사용자 데이터.*14개월.*새 이용 활동/);
+    assert.match(privacy, /Firebase Crashlytics.*90일/);
+    assert.match(privacy, /Firebase Performance Monitoring.*30일.*60일/);
+    assert.match(privacy, /끄기 전에 .*전달된 보고서는 이후 서버로 전송될 수 있습니다/);
+    assert.match(privacy, /이를 끄면 앱은 새로운 이용 통계, 오류 보고, 성능 측정 결과를 .* 전달하지 않습니다/);
+    assert.match(privacy, /꺼진 선택은 앱을 다시 실행해도 유지.*단축어 이용 통계의 대기 기록도 지우며/);
     assert.ok(privacy.includes('IDFV'));
     assert.ok(!privacy.includes('앱 인스턴스 ID를 새로 만듭니다.'));
     assert.ok(!privacy.includes('<!--'));
