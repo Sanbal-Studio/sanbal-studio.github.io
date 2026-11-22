@@ -34,9 +34,9 @@ describe('Sanbal Studio site content contract', () => {
     const privacy = readFileSync(new URL('src/content/apps/seureuk/privacy.mdx', root), 'utf8');
 
     assert.ok(seureuk);
-    assert.equal(seureuk.status, 'comingSoon');
+    assert.equal(seureuk.status, 'published');
     assert.equal(seureuk.supportEmail, 'dev.ksanbal@gmail.com');
-    assert.equal(seureuk.appStoreUrl, '');
+    assert.equal(seureuk.appStoreUrl, 'https://apps.apple.com/kr/app/id6835862875');
     assert.equal(seureuk.googlePlayUrl, '');
     assert.ok(privacy.includes('김현균'));
     assert.match(privacy, /Notion 문의 양식.*필수: 문의 구분, 의견·문의 내용.*선택: 회신 이메일 주소.*스크린샷/);
